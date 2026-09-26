@@ -1,0 +1,30 @@
+Regiao - Sigla ,Estado - Sigla,Municipio,Revenda,CNPJ da Revenda,Nome da Rua,Numero Rua ,Complemento,Bairro,Cep,Produto,Data da Coleta,Valor de Venda,Valor de Compra,Unidade de Medida,Bandeira
+"Sigla da Região da 
+revenda pesquisada","Sigla da Unidade 
+Federativa (UF) da 
+revenda pesquisada",Nome do município da revenda pesquisada,Nome da Revenda pesquisada,"Número do Cadastro 
+Nacional de Pessoa 
+Jurídica da revenda 
+pesquisada","Nome do logradouro da 
+revenda pesquisada","Número do logradouro 
+da revenda pesquisada","Complemento do 
+logradouro da revenda 
+pesquisada","Nome do bairro da 
+revenda pesquisada","Número do Código do 
+Endereço Postal (CEP) 
+do logradouro da 
+revenda pesquisada","Nome do 
+combustível 
+pesquisado","Data da coleta do(s) 
+preço(s)","Preço de venda ao consumidor final praticado pelo revendedor, na data da coleta","Preço de distribuição 
+(preço de venda da 
+distribuidora para o 
+posto revendedor de 
+combustível)
+* Série disponível até 
+agosto de 2020",Unidade de Medida,"Nome da Bandeira da revenda.
+O Posto bandeirado é aquele que opta por exibir a marca comercial de um 
+distribuidor, o posto deverá vender somente combustíveis fornecidos pelo 
+distribuidor detentor da marca comercial exibida aos consumidores. Já o 
+Posto bandeira branca é o que opta por não exibir marca comercial de 
+nenhuma distribuidora."
