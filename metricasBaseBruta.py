@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Lê a base limpa usando o mesmo separador e formato decimal da exportação.
-df = pd.read_csv("base_bruta_aracaju.csv", sep=";", decimal=",")
+df = pd.read_csv("base_limpa_aracaju.csv", sep=";", decimal=",")
 
 # Imprime a quantidade de registros.
 print("Quantidade de registros: ", len(df))

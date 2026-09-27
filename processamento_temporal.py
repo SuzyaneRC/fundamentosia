@@ -85,7 +85,7 @@ def _imprimir_resumo(df, minimo):
 def _rodar_isolado():
     # Uso apenas para depuração local desta etapa: lê a base limpa do disco,
     # processa e salva um CSV de conferência. 
-    caminho_entrada = Path("base_bruta_aracaju.csv")
+    caminho_entrada = Path("base_limpa_aracaju.csv")
     caminho_saida = Path("dados_aracaju_processados.csv")
 
     df = pd.read_csv(

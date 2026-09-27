@@ -148,7 +148,7 @@ print("Total de registros removidos:", quantidade_antes - quantidade_depois)
 
 # Grava um único CSV final com separador e decimal no padrão das planilhas.
 dadosAracaju.to_csv(
-    "base_bruta_aracaju.csv",
+    "base_limpa_aracaju.csv",
     index=False,
     encoding="utf-8-sig",
     sep=";",
