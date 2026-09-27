@@ -68,6 +68,21 @@ button {
   background: #087f6f;
 }
 
+/* Mantém a barra horizontal discreta, mas visível nas tabelas mais largas. */
+div:has(> table) {
+  scrollbar-color: #a9b3af transparent;
+  scrollbar-width: thin;
+}
+
+div:has(> table)::-webkit-scrollbar {
+  height: 8px;
+}
+
+div:has(> table)::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background: #a9b3af;
+}
+
 @media (max-width: 640px) {
   .recharts-cartesian-axis-tick-value {
     font-size: 10px;

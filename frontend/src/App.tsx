@@ -9,12 +9,14 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Droplets,
+  Eye,
   FilterX,
   Fuel,
   MapPin,
   RefreshCw,
   SearchCheck,
   TrendingDown,
+  TriangleAlert,
 } from 'lucide-react'
 import {
   Bar,
@@ -32,6 +34,7 @@ import Papa from 'papaparse'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -81,6 +84,21 @@ const productColors: Record<string, string> = {
 
 function productColor(product: string) {
   return productColors[product] ?? 'border-neutral-200 bg-neutral-50 text-neutral-700'
+}
+
+function optionalCurrency(value: number | null) {
+  return value === null ? 'Não disponível' : currency.format(value)
+}
+
+function optionalPercentage(value: number | null) {
+  if (value === null) return 'Não disponível'
+  const signal = value > 0 ? '+' : ''
+  return `${signal}${value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`
+}
+
+function variationColor(value: number | null) {
+  if (value === null || value === 0) return 'text-muted-foreground'
+  return value > 0 ? 'text-rose-700' : 'text-teal-700'
 }
 
 type FilterSelectProps = {
@@ -495,34 +513,105 @@ function EmptyState() {
 
 function RecordsTable({ records }: { records: FuelRecord[] }) {
   return (
-    <Table className="table-fixed sm:table-auto">
+    <Table className="min-w-[1080px]">
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[40%] sm:w-auto">Posto</TableHead>
-          <TableHead className="w-[38%] sm:w-auto">Produto</TableHead>
-          <TableHead className="hidden md:table-cell">Bairro</TableHead>
-          <TableHead className="hidden lg:table-cell">Bandeira</TableHead>
-          <TableHead className="hidden sm:table-cell">Data</TableHead>
-          <TableHead className="w-[22%] text-right sm:w-auto">Preço</TableHead>
+          <TableHead className="w-64">Posto</TableHead>
+          <TableHead className="w-44">Produto</TableHead>
+          <TableHead className="w-36">Bairro</TableHead>
+          <TableHead className="w-28">Variação</TableHead>
+          <TableHead className="w-44">Mediana dos outros postos</TableHead>
+          <TableHead className="w-28">Data</TableHead>
+          <TableHead className="w-24 text-right">Preço</TableHead>
+          <TableHead className="w-12"><span className="sr-only">Detalhes</span></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {records.map((item) => (
           <TableRow key={item.id}>
-            <TableCell className="w-[42%] max-w-48 font-medium"><span className="block truncate">{item.station}</span></TableCell>
+            <TableCell className="max-w-64 font-medium"><span className="block truncate">{item.station}</span></TableCell>
             <TableCell>
               <Badge variant="outline" className={`h-auto min-h-6 max-w-full whitespace-normal py-1 text-[10px] leading-3 ${productColor(item.product)}`}>
                 <Droplets className="mr-1 size-3 shrink-0" />{item.product}
               </Badge>
             </TableCell>
-            <TableCell className="hidden md:table-cell">{item.neighborhood}</TableCell>
-            <TableCell className="hidden lg:table-cell text-muted-foreground">{item.brand}</TableCell>
-            <TableCell className="hidden whitespace-nowrap text-muted-foreground sm:table-cell">{item.dateLabel}</TableCell>
+            <TableCell>{item.neighborhood}</TableCell>
+            <TableCell className={`whitespace-nowrap font-medium ${variationColor(item.percentageVariation)}`}>{optionalPercentage(item.percentageVariation)}</TableCell>
+            <TableCell className="whitespace-nowrap text-muted-foreground">{optionalCurrency(item.municipalMedian)}</TableCell>
+            <TableCell className="whitespace-nowrap text-muted-foreground">{item.dateLabel}</TableCell>
             <TableCell className="whitespace-nowrap text-right font-semibold">{currency.format(item.price)}</TableCell>
+            <TableCell><RecordDetails record={item} /></TableCell>
           </TableRow>
         ))}
       </TableBody>
     </Table>
+  )
+}
+
+// Apresenta as variáveis temporais e municipais calculadas para uma coleta.
+function RecordDetails({ record }: { record: FuelRecord }) {
+  return (
+    <Dialog>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="size-8" aria-label={`Ver detalhes de ${record.station}`}><Eye /></Button>
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Ver análise do registro</TooltipContent>
+      </Tooltip>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Detalhes da coleta</DialogTitle>
+          <DialogDescription>{record.product} em {record.dateLabel}</DialogDescription>
+        </DialogHeader>
+
+        <div className="mt-5 border-y py-4">
+          <p className="font-semibold leading-5">{record.station}</p>
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+            <span>CNPJ: {formatCnpj(record.cnpj)}</span>
+            <span>Bandeira: {record.brand}</span>
+            <span>Bairro: {record.neighborhood}</span>
+          </div>
+        </div>
+
+        <div className="mt-5">
+          <h4 className="text-sm font-semibold">Comparação temporal</h4>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <DetailMetric label="Preço atual" value={currency.format(record.price)} />
+            <DetailMetric label="Preço anterior" value={optionalCurrency(record.previousPrice)} />
+            <DetailMetric label="Variação" value={optionalPercentage(record.percentageVariation)} tone={variationColor(record.percentageVariation)} />
+            <DetailMetric label="Média histórica" value={optionalCurrency(record.historicalAverage)} />
+            <DetailMetric label="Mediana histórica" value={optionalCurrency(record.historicalMedian)} />
+            <DetailMetric label="Dif. para média" value={optionalCurrency(record.historicalMeanDifference)} tone={variationColor(record.historicalMeanDifference)} />
+            <DetailMetric label="Dif. para mediana" value={optionalCurrency(record.historicalMedianDifference)} tone={variationColor(record.historicalMedianDifference)} />
+          </div>
+        </div>
+
+        <div className="mt-5">
+          <h4 className="text-sm font-semibold">Comparação municipal</h4>
+          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+            <DetailMetric label="Preço do posto" value={currency.format(record.price)} />
+            <DetailMetric label="Mediana dos outros postos" value={optionalCurrency(record.municipalMedian)} />
+            <DetailMetric label="Diferença" value={optionalPercentage(record.municipalDifferencePercentage)} tone={variationColor(record.municipalDifferencePercentage)} />
+          </div>
+        </div>
+
+        <div className={`mt-5 flex items-start gap-2 rounded-md border p-3 text-xs ${record.hasFewRecords ? 'border-amber-200 bg-amber-50 text-amber-800' : 'border-teal-200 bg-teal-50 text-teal-800'}`}>
+          {record.hasFewRecords && <TriangleAlert className="mt-0.5 size-4 shrink-0" />}
+          <p><strong>{record.seriesRecordCount} registros</strong> na série deste posto e produto. {record.hasFewRecords ? 'A série possui poucos dados para uma comparação histórica confiável.' : 'A série possui histórico suficiente para as comparações iniciais.'}</p>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function DetailMetric({ label, value, tone }: { label: string; value: string; tone?: string }) {
+  return (
+    <div className="min-w-0 rounded-md bg-muted p-3">
+      <p className="text-[11px] text-muted-foreground">{label}</p>
+      <p className={`mt-1 break-words text-sm font-semibold ${tone ?? 'text-foreground'}`}>{value}</p>
+    </div>
   )
 }
 
