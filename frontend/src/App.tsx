@@ -513,32 +513,32 @@ function EmptyState() {
 
 function RecordsTable({ records }: { records: FuelRecord[] }) {
   return (
-    <Table className="table-fixed sm:table-auto">
+    <Table className="min-w-[1080px]">
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[34%] sm:w-auto">Posto</TableHead>
-          <TableHead className="w-[32%] sm:w-auto">Produto</TableHead>
-          <TableHead className="hidden md:table-cell">Bairro</TableHead>
-          <TableHead className="hidden lg:table-cell">Variação</TableHead>
-          <TableHead className="hidden xl:table-cell">Mediana municipal</TableHead>
-          <TableHead className="hidden sm:table-cell">Data</TableHead>
-          <TableHead className="w-[23%] text-right sm:w-auto">Preço</TableHead>
-          <TableHead className="w-[11%] sm:w-12"><span className="sr-only">Detalhes</span></TableHead>
+          <TableHead className="w-64">Posto</TableHead>
+          <TableHead className="w-44">Produto</TableHead>
+          <TableHead className="w-36">Bairro</TableHead>
+          <TableHead className="w-28">Variação</TableHead>
+          <TableHead className="w-40">Mediana municipal</TableHead>
+          <TableHead className="w-28">Data</TableHead>
+          <TableHead className="w-24 text-right">Preço</TableHead>
+          <TableHead className="w-12"><span className="sr-only">Detalhes</span></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {records.map((item) => (
           <TableRow key={item.id}>
-            <TableCell className="w-[42%] max-w-48 font-medium"><span className="block truncate">{item.station}</span></TableCell>
+            <TableCell className="max-w-64 font-medium"><span className="block truncate">{item.station}</span></TableCell>
             <TableCell>
               <Badge variant="outline" className={`h-auto min-h-6 max-w-full whitespace-normal py-1 text-[10px] leading-3 ${productColor(item.product)}`}>
                 <Droplets className="mr-1 size-3 shrink-0" />{item.product}
               </Badge>
             </TableCell>
-            <TableCell className="hidden md:table-cell">{item.neighborhood}</TableCell>
-            <TableCell className={`hidden whitespace-nowrap font-medium lg:table-cell ${variationColor(item.percentageVariation)}`}>{optionalPercentage(item.percentageVariation)}</TableCell>
-            <TableCell className="hidden whitespace-nowrap text-muted-foreground xl:table-cell">{optionalCurrency(item.municipalMedian)}</TableCell>
-            <TableCell className="hidden whitespace-nowrap text-muted-foreground sm:table-cell">{item.dateLabel}</TableCell>
+            <TableCell>{item.neighborhood}</TableCell>
+            <TableCell className={`whitespace-nowrap font-medium ${variationColor(item.percentageVariation)}`}>{optionalPercentage(item.percentageVariation)}</TableCell>
+            <TableCell className="whitespace-nowrap text-muted-foreground">{optionalCurrency(item.municipalMedian)}</TableCell>
+            <TableCell className="whitespace-nowrap text-muted-foreground">{item.dateLabel}</TableCell>
             <TableCell className="whitespace-nowrap text-right font-semibold">{currency.format(item.price)}</TableCell>
             <TableCell><RecordDetails record={item} /></TableCell>
           </TableRow>

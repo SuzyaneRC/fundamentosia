@@ -49,6 +49,10 @@ for (const config of [
 
   const screenshot = path.join(process.env.TEMP, `radar-precos-${config.name}.png`)
   await page.screenshot({ path: screenshot, fullPage: true })
+  const tableScrollAvailable = await page.locator('table').evaluate((table) => {
+    const container = table.parentElement
+    return Boolean(container && container.scrollWidth > container.clientWidth)
+  })
   await page.getByRole('button', { name: /Ver detalhes de/ }).first().click()
   const temporalDetailsVisible = await page.getByText('Comparação temporal', { exact: true }).isVisible()
   const municipalDetailsVisible = await page.getByText('Comparação municipal', { exact: true }).isVisible()
@@ -63,7 +67,7 @@ for (const config of [
     screenshot,
     detailScreenshot,
     horizontalOverflow: await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth),
-    interactions: { ...(interactions ?? {}), temporalDetailsVisible, municipalDetailsVisible, dialogFits },
+    interactions: { ...(interactions ?? {}), tableScrollAvailable, temporalDetailsVisible, municipalDetailsVisible, dialogFits },
     chartGeometry: await page.evaluate(() => ({
       bars: [...document.querySelectorAll('.recharts-bar-rectangle path')].map((element) => Math.round(element.getBoundingClientRect().width)),
       lines: [...document.querySelectorAll('.recharts-line-curve')].map((element) => Math.round(element.getBoundingClientRect().width)),
