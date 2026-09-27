@@ -21,6 +21,8 @@ O projeto prevê:
 
 - Python 3.9 ou superior
 - pandas
+- Node.js 20 ou superior
+- npm
 
 ## Como executar
 
@@ -66,6 +68,23 @@ python metricasBaseBruta.py
 ```
 
 Os comandos devem ser executados na raiz do repositório, onde estão os arquivos Python.
+
+### Executar o painel
+
+Depois de gerar `base_bruta_aracaju.csv`, instale as dependências do frontend:
+
+```powershell
+cd frontend
+npm install
+```
+
+Inicie o servidor de desenvolvimento:
+
+```powershell
+npm run dev
+```
+
+Abra o endereço exibido no terminal. O painel oferece filtros por produto, posto, bairro, bandeira e período, além de indicadores, gráficos, tabela e exportação dos registros filtrados.
 
 ## Resultado esperado
 
