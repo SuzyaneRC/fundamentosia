@@ -40,6 +40,13 @@ def salvar_resultados(df, nome_arquivo):
     return caminho
 
 
+def salvar_numero_txt(numero, nome_arquivo):
+    PASTA_SAIDAS.mkdir(parents=True, exist_ok=True)
+    caminho = PASTA_SAIDAS / nome_arquivo
+    caminho.write_text(f"{numero}\n", encoding="utf-8")
+    return caminho
+
+
 def validar_colunas(df, colunas):
     faltantes = [coluna for coluna in colunas if coluna not in df.columns]
     if faltantes:

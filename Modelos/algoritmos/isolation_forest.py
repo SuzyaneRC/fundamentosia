@@ -5,6 +5,7 @@ from util_dados import (
     carregar_dados,
     imprimir_resumo_base,
     padronizar_features,
+    salvar_numero_txt,
     salvar_resultados,
     selecionar_registros_aptos,
     validar_colunas,
@@ -109,7 +110,13 @@ def main():
     )
 
     exibir_resultados(df_resultado, resultados_contaminacao)
+    quantidade_anomalias = int(df_resultado["anomalia_isolation_forest"].sum())
+    caminho_txt = salvar_numero_txt(
+        quantidade_anomalias,
+        "anomalias_isolation_forest.txt",
+    )
     caminho = salvar_resultados(df_resultado, "resultado_isolation_forest.csv")
+    print(f"Arquivo TXT gerado: {caminho_txt}")
     print(f"\nArquivo gerado: {caminho}")
 
 

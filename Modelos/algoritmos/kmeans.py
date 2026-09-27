@@ -6,6 +6,7 @@ from util_dados import (
     carregar_dados,
     imprimir_resumo_base,
     padronizar_features,
+    salvar_numero_txt,
     salvar_resultados,
     selecionar_registros_aptos,
     validar_colunas,
@@ -104,7 +105,10 @@ def main():
     )
 
     exibir_resultados(df_resultado, limite_anomalia)
+    quantidade_anomalias = int(df_resultado["anomalia_kmeans"].sum())
+    caminho_txt = salvar_numero_txt(quantidade_anomalias, "anomalias_kmeans.txt")
     caminho = salvar_resultados(df_resultado, "resultado_kmeans.csv")
+    print(f"Arquivo TXT gerado: {caminho_txt}")
     print(f"\nArquivo gerado: {caminho}")
 
 

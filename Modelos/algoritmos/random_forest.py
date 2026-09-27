@@ -8,6 +8,7 @@ from sklearn.preprocessing import OneHotEncoder
 
 from util_dados import (
     carregar_dados,
+    salvar_numero_txt,
     salvar_resultados,
     selecionar_registros_aptos,
     validar_colunas,
@@ -155,7 +156,13 @@ def main():
     )
 
     exibir_resultados(df_resultado, limite_anomalia, metricas)
+    quantidade_anomalias = int(df_resultado["anomalia_random_forest"].sum())
+    caminho_txt = salvar_numero_txt(
+        quantidade_anomalias,
+        "anomalias_random_forest.txt",
+    )
     caminho = salvar_resultados(df_resultado, "resultado_random_forest.csv")
+    print(f"Arquivo TXT gerado: {caminho_txt}")
     print(f"\nArquivo gerado: {caminho}")
 
 
