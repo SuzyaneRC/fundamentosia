@@ -520,7 +520,7 @@ function RecordsTable({ records }: { records: FuelRecord[] }) {
           <TableHead className="w-44">Produto</TableHead>
           <TableHead className="w-36">Bairro</TableHead>
           <TableHead className="w-28">Variação</TableHead>
-          <TableHead className="w-40">Mediana municipal</TableHead>
+          <TableHead className="w-44">Mediana dos outros postos</TableHead>
           <TableHead className="w-28">Data</TableHead>
           <TableHead className="w-24 text-right">Preço</TableHead>
           <TableHead className="w-12"><span className="sr-only">Detalhes</span></TableHead>
@@ -583,7 +583,8 @@ function RecordDetails({ record }: { record: FuelRecord }) {
             <DetailMetric label="Variação" value={optionalPercentage(record.percentageVariation)} tone={variationColor(record.percentageVariation)} />
             <DetailMetric label="Média histórica" value={optionalCurrency(record.historicalAverage)} />
             <DetailMetric label="Mediana histórica" value={optionalCurrency(record.historicalMedian)} />
-            <DetailMetric label="Diferença histórica" value={optionalCurrency(record.historicalDifference)} tone={variationColor(record.historicalDifference)} />
+            <DetailMetric label="Dif. para média" value={optionalCurrency(record.historicalMeanDifference)} tone={variationColor(record.historicalMeanDifference)} />
+            <DetailMetric label="Dif. para mediana" value={optionalCurrency(record.historicalMedianDifference)} tone={variationColor(record.historicalMedianDifference)} />
           </div>
         </div>
 
@@ -591,7 +592,7 @@ function RecordDetails({ record }: { record: FuelRecord }) {
           <h4 className="text-sm font-semibold">Comparação municipal</h4>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
             <DetailMetric label="Preço do posto" value={currency.format(record.price)} />
-            <DetailMetric label="Mediana municipal" value={optionalCurrency(record.municipalMedian)} />
+            <DetailMetric label="Mediana dos outros postos" value={optionalCurrency(record.municipalMedian)} />
             <DetailMetric label="Diferença" value={optionalPercentage(record.municipalDifferencePercentage)} tone={variationColor(record.municipalDifferencePercentage)} />
           </div>
         </div>

@@ -96,4 +96,4 @@ Abra o endereço exibido no terminal. O painel oferece filtros por produto, post
 
 Ao executar `criaBaseBruta.py`, será criado ou atualizado o arquivo `base_limpa_aracaju.csv`. O terminal mostrará a quantidade de registros antes e depois da limpeza, os valores ausentes e os registros inválidos ou repetidos encontrados.
 
-Ao executar `processamento_temporal.py`, será criado ou atualizado o arquivo `dados_aracaju_processados.csv`, utilizado pelo frontend e pelas próximas etapas de análise. A base limpa permanece como fonte intermediária para refazer os cálculos.
+Ao executar `processamento_temporal.py`, será criado ou atualizado o arquivo `dados_aracaju_processados.csv`, utilizado pelo frontend e pelas próximas etapas de análise. As diferenças históricas são calculadas separadamente para média e mediana, e a referência municipal exclui o próprio CNPJ analisado. A base limpa permanece como fonte intermediária para refazer os cálculos.

@@ -14,7 +14,8 @@ type CsvRow = {
   variacao_percentual?: string
   media_historica_posto?: string
   mediana_historica_posto?: string
-  diff_historico_posto?: string
+  diff_media_historica_posto?: string
+  diff_mediana_historica_posto?: string
   mediana_municipal?: string
   diff_mediana_municipal?: string
   diff_mediana_municipal_percentual?: string
@@ -38,7 +39,8 @@ export type FuelRecord = {
   percentageVariation: number | null
   historicalAverage: number | null
   historicalMedian: number | null
-  historicalDifference: number | null
+  historicalMeanDifference: number | null
+  historicalMedianDifference: number | null
   municipalMedian: number | null
   municipalDifference: number | null
   municipalDifferencePercentage: number | null
@@ -84,7 +86,8 @@ export const fuelRecords: FuelRecord[] = parsed.data
     percentageVariation: parseOptionalNumber(row.variacao_percentual),
     historicalAverage: parseOptionalNumber(row.media_historica_posto),
     historicalMedian: parseOptionalNumber(row.mediana_historica_posto),
-    historicalDifference: parseOptionalNumber(row.diff_historico_posto),
+    historicalMeanDifference: parseOptionalNumber(row.diff_media_historica_posto),
+    historicalMedianDifference: parseOptionalNumber(row.diff_mediana_historica_posto),
     municipalMedian: parseOptionalNumber(row.mediana_municipal),
     municipalDifference: parseOptionalNumber(row.diff_mediana_municipal),
     municipalDifferencePercentage: parseOptionalNumber(row.diff_mediana_municipal_percentual),
