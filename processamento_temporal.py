@@ -46,16 +46,27 @@ def _calcular_historico_posto(df):
     df["media_historica_posto"] = grupo.transform(lambda s: s.expanding().mean().shift(1))
     df["mediana_historica_posto"] = grupo.transform(lambda s: s.expanding().median().shift(1))
 
-     # Diferença do preço atual em relação ao histórico do próprio posto
-    df["diff_historico_posto"] = df["Valor de Venda"] - df["mediana_historica_posto"]
+     # Diferenças do preço atual em relação às duas referências históricas
+    df["diff_media_historica_posto"] = df["Valor de Venda"] - df["media_historica_posto"]
+    df["diff_mediana_historica_posto"] = df["Valor de Venda"] - df["mediana_historica_posto"]
     return df
 
 
 def _calcular_mediana_municipal(df):
-    # Agrupa por produto + data (período = data exata de coleta)
-    # para comparar cada posto com os outros postos de Aracaju no mesmo dia/produto
-    grupo = df.groupby(["Produto", "Data da Coleta"])["Valor de Venda"]
-    df["mediana_municipal"] = grupo.transform("median")
+    # Para cada produto e data, calcula a mediana apenas dos outros CNPJs.
+    # Assim, o preço avaliado não influencia a própria referência municipal.
+    medianas_outros_postos = pd.Series(float("nan"), index=df.index, dtype="float64")
+    grupos = df.groupby(["Produto", "Data da Coleta"], sort=False).groups
+
+    for indices in grupos.values():
+        dados_periodo = df.loc[indices, ["CNPJ da Revenda", "Valor de Venda"]]
+        for cnpj in dados_periodo["CNPJ da Revenda"].unique():
+            linhas_do_posto = dados_periodo["CNPJ da Revenda"] == cnpj
+            precos_outros_postos = dados_periodo.loc[~linhas_do_posto, "Valor de Venda"]
+            indices_do_posto = dados_periodo.index[linhas_do_posto]
+            medianas_outros_postos.loc[indices_do_posto] = precos_outros_postos.median()
+
+    df["mediana_municipal"] = medianas_outros_postos
 
     # Quanto o preço do posto se distancia do "normal" do município naquele dia
     df["diff_mediana_municipal"] = df["Valor de Venda"] - df["mediana_municipal"]
@@ -80,12 +91,13 @@ def _imprimir_resumo(df, minimo):
     print("Quantidade de séries (posto + produto):", total_series)
     print(f"Séries com menos de {minimo} registros:", len(series_curtas))
     print("Registros sem preço anterior (primeira coleta da série):", df["preco_anterior"].isna().sum())
+    print("Registros sem outros postos para comparação municipal:", df["mediana_municipal"].isna().sum())
 
 
 def _rodar_isolado():
     # Uso apenas para depuração local desta etapa: lê a base limpa do disco,
     # processa e salva um CSV de conferência. 
-    caminho_entrada = Path("base_bruta_aracaju.csv")
+    caminho_entrada = Path("base_limpa_aracaju.csv")
     caminho_saida = Path("dados_aracaju_processados.csv")
 
     df = pd.read_csv(

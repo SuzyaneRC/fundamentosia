@@ -63,6 +63,12 @@ Gere a base limpa:
 python criaBaseBruta.py
 ```
 
+Adicione as variáveis temporais e históricas:
+
+```powershell
+python processamento_temporal.py
+```
+
 Consulte as métricas básicas da base gerada:
 
 ```powershell
@@ -99,7 +105,7 @@ Os comandos devem ser executados na raiz do repositório, onde estão os arquivo
 
 ### Executar o painel
 
-Depois de gerar `base_bruta_aracaju.csv`, instale as dependências do frontend:
+Depois de gerar `base_limpa_aracaju.csv` e `dados_aracaju_processados.csv`, instale as dependências do frontend:
 
 ```powershell
 cd frontend
@@ -112,12 +118,13 @@ Inicie o servidor de desenvolvimento:
 npm run dev
 ```
 
-Abra o endereço exibido no terminal. O painel oferece filtros por produto, posto, bairro, bandeira e período, além de indicadores, gráficos, tabela e exportação dos registros filtrados.
+Abra o endereço exibido no terminal. O painel oferece filtros por produto, posto, bairro, bandeira e período, além de indicadores, gráficos, paginação, exportação e detalhes das comparações temporais e municipais de cada registro.
 
 ## Resultado esperado
 
-Ao executar `criaBaseBruta.py`, será criado ou atualizado o arquivo `base_bruta_aracaju.csv`. O terminal mostrará a quantidade de registros antes e depois da limpeza, os valores ausentes e os registros inválidos ou repetidos encontrados.
+Ao executar `criaBaseBruta.py`, será criado ou atualizado o arquivo `base_limpa_aracaju.csv`. O terminal mostrará a quantidade de registros antes e depois da limpeza, os valores ausentes e os registros inválidos ou repetidos encontrados.
 
 Após o processamento temporal, será gerado o arquivo `dados_aracaju_processados.csv`, contendo as variáveis históricas e temporais utilizadas nas etapas de análise.
 
 Ao executar `baseline_regressao.py`, será gerado o arquivo `dados_aracaju_baseline.csv`, contendo os preços estimados pela regressão, os resíduos, a pontuação de anomalia e a sinalização dos registros considerados atípicos pelo baseline.
+Ao executar `processamento_temporal.py`, será criado ou atualizado o arquivo `dados_aracaju_processados.csv`, utilizado pelo frontend e pelas próximas etapas de análise. As diferenças históricas são calculadas separadamente para média e mediana, e a referência municipal exclui o próprio CNPJ analisado. A base limpa permanece como fonte intermediária para refazer os cálculos.
