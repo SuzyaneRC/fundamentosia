@@ -53,11 +53,7 @@ source .venv/bin/activate
 Instale as dependências Python:
 
 ```powershell
-<<<<<<< HEAD
-python -m pip install pandas scikit-learn
-=======
 python -m pip install pandas numpy scikit-learn
->>>>>>> origin/main
 ```
 
 Coloque as planilhas CSV da ANP na pasta `planilhas`. Os arquivos devem utilizar codificação UTF-8, separador `;` e manter os nomes das colunas da fonte.
@@ -80,14 +76,12 @@ Consulte as métricas básicas da base gerada:
 python metricasBaseBruta.py
 ```
 
-<<<<<<< HEAD
 Execute a etapa inicial dos modelos de IA:
 
 ```powershell
 python modelos_ia.py
 ```
 
-=======
 Baseline de regressão:
 
 Após o processamento temporal da base, o projeto utiliza um modelo de regressão linear como método baseline para estimar o preço esperado de cada produto ao longo do tempo.
@@ -114,7 +108,6 @@ O método:
 
 Como resultado, é gerado o arquivo dados_aracaju_baseline.csv, que contém os dados processados juntamente com as informações produzidas pelo baseline de regressão.
 
->>>>>>> origin/main
 Os comandos devem ser executados na raiz do repositório, onde estão os arquivos Python.
 
 ## Modelos de IA
