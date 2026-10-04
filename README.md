@@ -21,6 +21,7 @@ O projeto prevê:
 
 - Python 3.9 ou superior
 - pandas
+- scikit-learn
 - Node.js 20 ou superior
 - npm
 - numpy
@@ -49,7 +50,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Instale a dependência atual:
+Instale as dependências Python:
 
 ```powershell
 python -m pip install pandas numpy scikit-learn
@@ -73,6 +74,12 @@ Consulte as métricas básicas da base gerada:
 
 ```powershell
 python metricasBaseBruta.py
+```
+
+Execute a etapa inicial dos modelos de IA:
+
+```powershell
+python modelos_ia.py
 ```
 
 Baseline de regressão:
@@ -102,6 +109,22 @@ O método:
 Como resultado, é gerado o arquivo dados_aracaju_baseline.csv, que contém os dados processados juntamente com as informações produzidas pelo baseline de regressão.
 
 Os comandos devem ser executados na raiz do repositório, onde estão os arquivos Python.
+
+## Modelos de IA
+
+### Isolation Forest
+
+Modelo utilizado inicialmente para identificar registros com características incomuns em relação ao restante da base. A primeira configuração usa `n_estimators=100`, `contamination=0.05` e `random_state=42`. Esses parâmetros são experimentais e poderão ser ajustados após novos testes.
+
+O script `modelos_ia.py` lê `dados_aracaju_processados.csv`, preserva a base original e gera `dados_modelos_ia.csv` com as colunas `anomalia_isolation` e `score_isolation`. A anomalia indica comportamento estatisticamente incomum, não irregularidade, fraude ou abuso de preço.
+
+### K-Means
+
+Será utilizado posteriormente para agrupar registros com features numéricas padronizadas. A distância de cada registro ao centroide do seu cluster poderá ser usada como score experimental de anomalia. O valor `n_clusters=3` deve ser tratado apenas como configuração inicial de teste.
+
+### Random Forest
+
+Será utilizado como `RandomForestRegressor` para estimar o preço esperado (`Valor de Venda`). O erro entre preço previsto e preço real poderá ser usado como indicador de comportamento atípico. Como `Valor de Venda` será o alvo, ele não deve ser usado também como feature de entrada. Variáveis categóricas como `Produto`, `Bairro` e `Bandeira` precisarão ser transformadas antes do treinamento.
 
 ### Executar o painel
 
