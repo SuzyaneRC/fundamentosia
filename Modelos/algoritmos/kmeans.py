@@ -28,14 +28,14 @@ def executar_kmeans(x_scaled):
     distancias = modelo.transform(x_scaled)
     scores = distancias.min(axis=1)
     limite_anomalia = float(np.quantile(scores, PERCENTIL_ANOMALIA))
-    anomalias = scores >= limite_anomalia
+    anomalias = (scores >= limite_anomalia) & (scores > 1e-12)
     return modelo, clusters, scores, anomalias, limite_anomalia
 
 
 def aplicar_resultados(df_original, indices_modelo, clusters, scores, anomalias):
     df_resultado = df_original.copy()
     df_resultado["utilizado_kmeans"] = False
-    df_resultado["cluster_kmeans"] = ""
+    df_resultado["cluster_kmeans"] = float("nan")
     df_resultado["score_kmeans"] = float("nan")
     df_resultado["anomalia_kmeans"] = False
 
@@ -87,24 +87,11 @@ def exibir_resultados(df_resultado, limite_anomalia):
 
 
 def main():
-    df = carregar_dados()
-    features = validar_colunas(df, FEATURES_ANOMALIA)
-    df_modelo, mascara_apta = selecionar_registros_aptos(df, features)
-
-    imprimir_resumo_base(df, df_modelo, mascara_apta, features)
-
-    x_scaled, _ = padronizar_features(df_modelo, features)
-    _, clusters, scores, anomalias, limite_anomalia = executar_kmeans(x_scaled)
-
-    df_resultado = aplicar_resultados(
-        df,
-        df_modelo.index,
-        clusters,
-        scores,
-        anomalias,
-    )
-
-    exibir_resultados(df_resultado, limite_anomalia)
+    from modelos_produto import aplicar_por_produto
+    df_resultado, limites, contaminacoes = aplicar_por_produto(carregar_dados())
+    print("Modelos e padroniza??o separados por combust?vel.")
+    print("Limites K-Means:", limites)
+    print("Testes de contamina??o por produto:", contaminacoes)
     quantidade_anomalias = int(df_resultado["anomalia_kmeans"].sum())
     caminho_txt = salvar_numero_txt(quantidade_anomalias, "anomalias_kmeans.txt")
     caminho = salvar_resultados(df_resultado, "resultado_kmeans.csv")
