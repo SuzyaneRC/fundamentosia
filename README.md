@@ -23,6 +23,8 @@ O projeto prevê:
 - pandas
 - Node.js 20 ou superior
 - npm
+- numpy
+- scikit-learn
 
 ## Como executar
 
@@ -50,7 +52,7 @@ source .venv/bin/activate
 Instale a dependência atual:
 
 ```powershell
-python -m pip install pandas
+python -m pip install pandas numpy scikit-learn
 ```
 
 Coloque as planilhas CSV da ANP na pasta `planilhas`. Os arquivos devem utilizar codificação UTF-8, separador `;` e manter os nomes das colunas da fonte.
@@ -72,6 +74,32 @@ Consulte as métricas básicas da base gerada:
 ```powershell
 python metricasBaseBruta.py
 ```
+
+Baseline de regressão:
+
+Após o processamento temporal da base, o projeto utiliza um modelo de regressão linear como método baseline para estimar o preço esperado de cada produto ao longo do tempo.
+
+```powershell
+python baseline_regressao.py
+```
+
+O método:
+
+- realiza a regressão separadamente para cada produto;
+
+- utiliza o tempo como variável explicativa;
+
+- calcula o preço estimado;
+
+- calcula o resíduo entre o preço observado e o preço estimado;
+
+- utiliza o desvio padrão e o MAD (Median Absolute Deviation) para identificar resíduos atípicos;
+
+- gera uma pontuação de anomalia baseada no tamanho do resíduo;
+
+- cria a coluna anomalia_regressao para sinalizar os registros identificados.
+
+Como resultado, é gerado o arquivo dados_aracaju_baseline.csv, que contém os dados processados juntamente com as informações produzidas pelo baseline de regressão.
 
 Os comandos devem ser executados na raiz do repositório, onde estão os arquivos Python.
 
@@ -96,4 +124,7 @@ Abra o endereço exibido no terminal. O painel oferece filtros por produto, post
 
 Ao executar `criaBaseBruta.py`, será criado ou atualizado o arquivo `base_limpa_aracaju.csv`. O terminal mostrará a quantidade de registros antes e depois da limpeza, os valores ausentes e os registros inválidos ou repetidos encontrados.
 
+Após o processamento temporal, será gerado o arquivo `dados_aracaju_processados.csv`, contendo as variáveis históricas e temporais utilizadas nas etapas de análise.
+
+Ao executar `baseline_regressao.py`, será gerado o arquivo `dados_aracaju_baseline.csv`, contendo os preços estimados pela regressão, os resíduos, a pontuação de anomalia e a sinalização dos registros considerados atípicos pelo baseline.
 Ao executar `processamento_temporal.py`, será criado ou atualizado o arquivo `dados_aracaju_processados.csv`, utilizado pelo frontend e pelas próximas etapas de análise. As diferenças históricas são calculadas separadamente para média e mediana, e a referência municipal exclui o próprio CNPJ analisado. A base limpa permanece como fonte intermediária para refazer os cálculos.
