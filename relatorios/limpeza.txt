@@ -1,0 +1,80 @@
+Fonte: 2024.02.csv; registros: 421382; separador: ; ; codificação: UTF-8
+Tipos iniciais:
+Regiao - Sigla           str
+Estado - Sigla           str
+Municipio                str
+Revenda                  str
+CNPJ da Revenda          str
+Nome da Rua              str
+Numero Rua               str
+Complemento              str
+Bairro                   str
+Cep                      str
+Produto                  str
+Data da Coleta           str
+Valor de Venda           str
+Valor de Compra      float64
+Unidade de Medida        str
+Bandeira                 str
+Fonte: 2025.01.csv; registros: 429523; separador: ; ; codificação: UTF-8
+Tipos iniciais:
+Regiao - Sigla           str
+Estado - Sigla           str
+Municipio                str
+Revenda                  str
+CNPJ da Revenda          str
+Nome da Rua              str
+Numero Rua               str
+Complemento              str
+Bairro                   str
+Cep                      str
+Produto                  str
+Data da Coleta           str
+Valor de Venda           str
+Valor de Compra      float64
+Unidade de Medida        str
+Bandeira                 str
+Fonte: 2025.02.csv; registros: 384208; separador: ; ; codificação: UTF-8
+Tipos iniciais:
+Regiao - Sigla           str
+Estado - Sigla           str
+Municipio                str
+Revenda                  str
+CNPJ da Revenda        int64
+Nome da Rua              str
+Numero Rua               str
+Complemento              str
+Bairro                   str
+Cep                      str
+Produto                  str
+Data da Coleta           str
+Valor de Venda           str
+Valor de Compra      float64
+Unidade de Medida        str
+Bandeira                 str
+Fonte: 2026.01.csv; registros: 422418; separador: ; ; codificação: UTF-8
+Tipos iniciais:
+Regiao - Sigla           str
+Estado - Sigla           str
+Municipio                str
+Revenda                  str
+CNPJ da Revenda          str
+Nome da Rua              str
+Numero Rua               str
+Complemento              str
+Bairro                   str
+Cep                      str
+Produto                  str
+Data da Coleta           str
+Valor de Venda           str
+Valor de Compra      float64
+Unidade de Medida        str
+Bandeira                 str
+Produtos fora do escopo automotivo removidos: 0
+Quantidade de registros antes da limpeza: 4816
+Valores ausentes: nenhum
+Preços nulos, iguais a zero ou negativos removidos: 0
+Registros duplicados removidos: 0
+Registros repetidos do mesmo posto, produto e data removidos: 0
+Quantidade de registros depois da limpeza: 4816
+Total de registros removidos: 0

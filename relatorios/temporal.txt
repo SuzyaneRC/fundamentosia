@@ -1,0 +1,6 @@
+Quantidade de registros: 4816
+Quantidade de séries (posto + produto): 117
+Séries com menos de 3 registros: 10
+Registros sem preço anterior (primeira coleta da série): 117
+Registros sem outros postos para comparação municipal: 92
+[depuração] Base processada salva em dados_aracaju_processados.csv
