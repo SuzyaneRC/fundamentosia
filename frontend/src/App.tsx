@@ -38,7 +38,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { fuelRecords, type FuelRecord } from '@/lib/fuel-data'
+import { fuelRecords, methodKeys, methodLabels, type FuelRecord } from '@/lib/fuel-data'
+import { MethodComparison } from '@/components/method-comparison'
 
 const ALL = '__all__'
 
@@ -156,13 +157,13 @@ function StatCard({ label, value, detail, icon, accent = 'teal' }: StatCardProps
 
 function App() {
   // Opções disponíveis nos filtros, extraídas diretamente da base carregada.
-  const products = useMemo(() => unique(fuelRecords.map((item) => item.product)), [])
-  const stations = useMemo(() => unique(fuelRecords.map((item) => item.station)), [])
-  const neighborhoods = useMemo(() => unique(fuelRecords.map((item) => item.neighborhood)), [])
-  const brands = useMemo(() => unique(fuelRecords.map((item) => item.brand)), [])
-  const totalStations = useMemo(() => new Set(fuelRecords.map((item) => item.cnpj)).size, [])
-  const minDataDate = useMemo(() => new Date(Math.min(...fuelRecords.map((item) => item.date.getTime()))), [])
-  const maxDataDate = useMemo(() => new Date(Math.max(...fuelRecords.map((item) => item.date.getTime()))), [])
+  const products = useMemo(() => unique(fuelRecords.map((item) => item.product)), [fuelRecords])
+  const stations = useMemo(() => unique(fuelRecords.map((item) => item.station)), [fuelRecords])
+  const neighborhoods = useMemo(() => unique(fuelRecords.map((item) => item.neighborhood)), [fuelRecords])
+  const brands = useMemo(() => unique(fuelRecords.map((item) => item.brand)), [fuelRecords])
+  const totalStations = useMemo(() => new Set(fuelRecords.map((item) => item.cnpj)).size, [fuelRecords])
+  const minDataDate = useMemo(() => new Date(Math.min(...fuelRecords.map((item) => item.date.getTime()))), [fuelRecords])
+  const maxDataDate = useMemo(() => new Date(Math.max(...fuelRecords.map((item) => item.date.getTime()))), [fuelRecords])
 
   const [product, setProduct] = useState(ALL)
   const [station, setStation] = useState(ALL)
@@ -172,9 +173,11 @@ function App() {
   const [endDate, setEndDate] = useState(toInputDate(maxDataDate))
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const [recordStatus, setRecordStatus] = useState(ALL)
 
   // O botão de limpeza só aparece quando o usuário altera o recorte inicial.
   const hasActiveFilters =
+    recordStatus !== ALL ||
     product !== ALL ||
     station !== ALL ||
     neighborhood !== ALL ||
@@ -193,7 +196,7 @@ function App() {
       (brand === ALL || item.brand === brand) &&
       item.date >= start && item.date <= end,
     )
-  }, [brand, endDate, neighborhood, product, startDate, station])
+  }, [brand, endDate, neighborhood, product, startDate, station, fuelRecords])
 
   // Calcula os indicadores resumidos apresentados no topo do painel.
   const stats = useMemo(() => {
@@ -255,7 +258,12 @@ function App() {
   }, [filtered])
 
   // Ordena as coletas mais recentes primeiro e separa apenas a página atual.
-  const sortedRecords = useMemo(() => [...filtered].sort((a, b) => b.date.getTime() - a.date.getTime()), [filtered])
+  const sortedRecords = useMemo(() => filtered.filter(record => {
+    const flagged = methodKeys.filter(key => record.methods[key].evaluated && record.methods[key].anomaly)
+    return recordStatus === ALL || (recordStatus === 'Pelo menos um método' && flagged.length > 0)
+      || (recordStatus === 'Dois ou mais métodos' && flagged.length >= 2)
+      || flagged.some(key => methodLabels[key] === recordStatus)
+  }).sort((a, b) => b.date.getTime() - a.date.getTime()), [filtered, recordStatus])
   const pageCount = Math.max(1, Math.ceil(sortedRecords.length / pageSize))
   const currentPage = Math.min(page, pageCount)
   const paginatedRecords = useMemo(
@@ -271,11 +279,12 @@ function App() {
     setStartDate(toInputDate(minDataDate))
     setEndDate(toInputDate(maxDataDate))
     setPage(1)
+    setRecordStatus(ALL)
   }
 
   // Exporta somente os registros do recorte atual no mesmo padrão CSV da base.
-  function downloadFiltered() {
-    const rows = filtered.map((item) => ({
+  function downloadFiltered(tableOnly = false) {
+    const rows = (tableOnly ? sortedRecords : filtered).map((item) => ({
       Revenda: item.station,
       'CNPJ da Revenda': item.cnpj,
       Bairro: item.neighborhood,
@@ -283,8 +292,13 @@ function App() {
       'Data da Coleta': item.dateLabel,
       'Valor de Venda': item.price.toFixed(2).replace('.', ','),
       Bandeira: item.brand,
+      ...Object.fromEntries(methodKeys.flatMap(key => [
+        [`utilizado_${key}`, item.methods[key].evaluated],
+        [`anomalia_${key}`, item.methods[key].evaluated ? item.methods[key].anomaly : ''],
+        [`pontuacao_${key}`, item.methods[key].score ?? ''],
+      ])),
     }))
-    const csv = Papa.unparse(rows, { delimiter: ';' })
+    const csv = Papa.unparse(rows, { delimiter: ';', escapeFormulae: true })
     const url = URL.createObjectURL(new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8' }))
     const anchor = document.createElement('a')
     anchor.href = url
@@ -310,7 +324,7 @@ function App() {
               <Badge className="hidden sm:inline-flex"><span className="mr-1.5 size-1.5 rounded-full bg-teal-600" />Base atualizada</Badge>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={downloadFiltered} aria-label="Baixar dados filtrados"><ArrowDownToLine /></Button>
+                  <Button variant="outline" size="icon" onClick={() => downloadFiltered()} aria-label="Baixar dados filtrados"><ArrowDownToLine /></Button>
                 </TooltipTrigger>
                 <TooltipContent>Baixar dados filtrados</TooltipContent>
               </Tooltip>
@@ -469,6 +483,7 @@ function App() {
                 </Card>
               </div>
 
+              <MethodComparison records={filtered} />
               {/* Tabela completa com paginação e exportação dos dados filtrados. */}
               <Card>
                 <CardHeader className="flex-row items-start justify-between gap-4 space-y-0">
@@ -476,9 +491,10 @@ function App() {
                     <CardTitle>Registros mais recentes</CardTitle>
                     <CardDescription className="mt-1">Últimas coletas disponíveis no recorte atual</CardDescription>
                   </div>
-                  <Button variant="outline" size="sm" onClick={downloadFiltered}><ArrowDownToLine />Exportar</Button>
+                  <Button variant="outline" size="sm" onClick={() => downloadFiltered(true)}><ArrowDownToLine />Exportar</Button>
                 </CardHeader>
                 <CardContent className="px-0 pb-0">
+                  <div className="mb-4 max-w-sm px-5"><FilterSelect label="Sinalizações na tabela" value={recordStatus} options={['Pelo menos um método', 'Dois ou mais métodos', ...methodKeys.map(key => methodLabels[key])]} placeholder="Todos os registros" onChange={value => { setRecordStatus(value); setPage(1) }} /><p className="mt-2 text-xs text-muted-foreground">Este filtro refina a tabela e sua exportação; a comparação acima mantém o recorte completo.</p></div>
                   {paginatedRecords.length ? (
                     <>
                       <RecordsTable records={paginatedRecords} />
@@ -511,6 +527,12 @@ function EmptyState() {
   )
 }
 
+function MethodFlags({ record }: { record: FuelRecord }) {
+  const flagged = methodKeys.filter(key => record.methods[key].evaluated && record.methods[key].anomaly)
+  const evaluated = methodKeys.filter(key => record.methods[key].evaluated).length
+  return <div className="flex flex-wrap gap-1">{flagged.map(key => <Badge key={key} variant="outline" className="border-amber-200 bg-amber-50 text-[10px] text-amber-800">{methodLabels[key]}</Badge>)}<span className="block w-full text-[11px] text-muted-foreground">{evaluated ? `${flagged.length} sinalizam / ${evaluated} avaliados` : 'Não avaliado'}</span></div>
+}
+
 function RecordsTable({ records }: { records: FuelRecord[] }) {
   return (
     <Table className="min-w-[1080px]">
@@ -523,6 +545,7 @@ function RecordsTable({ records }: { records: FuelRecord[] }) {
           <TableHead className="w-44">Mediana dos outros postos</TableHead>
           <TableHead className="w-28">Data</TableHead>
           <TableHead className="w-24 text-right">Preço</TableHead>
+          <TableHead>Sinalizações</TableHead>
           <TableHead className="w-12"><span className="sr-only">Detalhes</span></TableHead>
         </TableRow>
       </TableHeader>
@@ -540,6 +563,7 @@ function RecordsTable({ records }: { records: FuelRecord[] }) {
             <TableCell className="whitespace-nowrap text-muted-foreground">{optionalCurrency(item.municipalMedian)}</TableCell>
             <TableCell className="whitespace-nowrap text-muted-foreground">{item.dateLabel}</TableCell>
             <TableCell className="whitespace-nowrap text-right font-semibold">{currency.format(item.price)}</TableCell>
+            <TableCell className="min-w-44"><MethodFlags record={item} /></TableCell>
             <TableCell><RecordDetails record={item} /></TableCell>
           </TableRow>
         ))}
@@ -575,6 +599,25 @@ function RecordDetails({ record }: { record: FuelRecord }) {
           </div>
         </div>
 
+        <div className="mt-5">
+          <h4 className="text-sm font-semibold">Resultados dos métodos</h4>
+          <div className="mt-3 grid grid-cols-2 gap-2">{methodKeys.map(key => {
+            const result = record.methods[key]
+            return <DetailMetric key={key} label={methodLabels[key]} value={result.evaluated ? `${result.anomaly ? 'Sinalizado' : 'Não sinalizado'} · ${result.score?.toLocaleString('pt-BR', { maximumFractionDigits: 3 }) ?? 'N/D'}${key === 'random_forest' ? ' R$ de erro' : ''}` : 'Não avaliado'} tone={result.evaluated && result.anomaly ? 'text-amber-800' : undefined} />
+          })}</div>
+          <p className="mt-2 text-xs text-muted-foreground">Pontuações têm escalas distintas. Random Forest mostra o erro absoluto fora do treino.</p>
+          <div className="mt-3 rounded-md border bg-muted/40 p-3 text-xs leading-5">
+            <h5 className="font-semibold">Indicadores associados à sinalização</h5>
+            <ul className="mt-2 list-disc space-y-1 pl-4">
+              <li>Desde a coleta anterior: {optionalCurrency(record.absoluteVariation)} ({optionalPercentage(record.percentageVariation)}).</li>
+              <li>Em relação aos outros postos no mesmo dia: {optionalPercentage(record.municipalDifferencePercentage)}; mediana {optionalCurrency(record.municipalMedian)}.</li>
+              <li>Em relação à mediana histórica do posto: {optionalCurrency(record.historicalMedianDifference)}.</li>
+              {record.methods.regressao.evaluated && <li>Baseline: preço estimado {optionalCurrency(record.baselinePrediction)}; diferença {optionalCurrency(record.baselinePrediction === null ? null : record.price - record.baselinePrediction)}.</li>}
+              {record.methods.random_forest.evaluated && <li>Random Forest: previsão {optionalCurrency(record.forestPrediction)}, erro {optionalCurrency(record.methods.random_forest.score)}, limite {optionalCurrency(record.forestThreshold)}. Janela: {record.forestWindow}.</li>}
+            </ul>
+            <p className="mt-2 text-muted-foreground">São referências para conferir o caso, sem atribuir uma causa ao alerta. Isolation Forest e K-Means combinam as variáveis e são ajustados separadamente por combustível.</p>
+          </div>
+        </div>
         <div className="mt-5">
           <h4 className="text-sm font-semibold">Comparação temporal</h4>
           <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
