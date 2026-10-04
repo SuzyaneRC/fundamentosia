@@ -1,5 +1,5 @@
 import Papa from 'papaparse'
-import csvText from '../../../dados_aracaju_processados.csv?raw'
+import csvUrl from '../../../dados_aracaju_processados.csv?url'
 
 type CsvRow = {
   [key: string]: string | undefined
@@ -122,4 +122,10 @@ return parsed.data
   .filter((record) => record.station && record.cnpj && record.product && Number.isFinite(record.price) && record.price > 0 && Number.isFinite(record.date.getTime()))
 }
 
-export const fuelRecords = parseFuelRecords(csvText)
+export async function loadFuelRecords(signal?: AbortSignal) {
+  const response = await fetch(csvUrl, { signal })
+  if (!response.ok) throw new Error('Não foi possível carregar a base de preços.')
+  const records = parseFuelRecords(await response.text())
+  if (!records.length) throw new Error('A base de preços não possui registros válidos.')
+  return records
+}

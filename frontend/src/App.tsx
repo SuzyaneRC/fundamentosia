@@ -1,4 +1,4 @@
-import { useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   ArrowDownToLine,
   Building2,
@@ -38,7 +38,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { fuelRecords, methodKeys, methodLabels, type FuelRecord } from '@/lib/fuel-data'
+import { loadFuelRecords, methodKeys, methodLabels, type FuelRecord } from '@/lib/fuel-data'
 import { MethodComparison } from '@/components/method-comparison'
 
 const ALL = '__all__'
@@ -155,7 +155,7 @@ function StatCard({ label, value, detail, icon, accent = 'teal' }: StatCardProps
   )
 }
 
-function App() {
+function App({ fuelRecords }: { fuelRecords: FuelRecord[] }) {
   // Opções disponíveis nos filtros, extraídas diretamente da base carregada.
   const products = useMemo(() => unique(fuelRecords.map((item) => item.product)), [fuelRecords])
   const stations = useMemo(() => unique(fuelRecords.map((item) => item.station)), [fuelRecords])
@@ -711,4 +711,19 @@ function Pagination({ page, pageCount, pageSize, total, onPageChange, onPageSize
   )
 }
 
-export default App
+export default function FuelApp() {
+  const [records, setRecords] = useState<FuelRecord[] | null>(null)
+  const [error, setError] = useState('')
+  const [attempt, setAttempt] = useState(0)
+  useEffect(() => {
+    const controller = new AbortController()
+    loadFuelRecords(controller.signal).then(data => {
+      if (!controller.signal.aborted) setRecords(data)
+    }).catch((reason: unknown) => {
+      if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : 'Falha ao carregar os dados.')
+    })
+    return () => controller.abort()
+  }, [attempt])
+  if (!records) return <main className="mx-auto max-w-xl space-y-4 p-8"><h1 className="text-xl font-semibold">Radar de Preços</h1>{error ? <><p role="alert">{error}</p><Button onClick={() => { setError(''); setAttempt(value => value + 1) }}>Tentar novamente</Button></> : <p role="status">Carregando preços e comparação dos métodos…</p>}</main>
+  return <App fuelRecords={records} />
+}
