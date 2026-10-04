@@ -40,6 +40,9 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { loadFuelRecords, methodKeys, methodLabels, type FuelRecord } from '@/lib/fuel-data'
 import { MethodComparison } from '@/components/method-comparison'
+import { RecordReview } from '@/components/record-review'
+import { ReviewProvider } from '@/lib/reviews'
+import { useReviews, recordKey, reviewLabels, fingerprint } from '@/lib/review-store'
 
 const ALL = '__all__'
 
@@ -156,6 +159,7 @@ function StatCard({ label, value, detail, icon, accent = 'teal' }: StatCardProps
 }
 
 function App({ fuelRecords }: { fuelRecords: FuelRecord[] }) {
+  const { reviews } = useReviews()
   // Opções disponíveis nos filtros, extraídas diretamente da base carregada.
   const products = useMemo(() => unique(fuelRecords.map((item) => item.product)), [fuelRecords])
   const stations = useMemo(() => unique(fuelRecords.map((item) => item.station)), [fuelRecords])
@@ -292,6 +296,10 @@ function App({ fuelRecords }: { fuelRecords: FuelRecord[] }) {
       'Data da Coleta': item.dateLabel,
       'Valor de Venda': item.price.toFixed(2).replace('.', ','),
       Bandeira: item.brand,
+      revisao: reviews[recordKey(item)] ? reviewLabels[reviews[recordKey(item)].status] : 'Pendente',
+      observacoes_revisao: reviews[recordKey(item)]?.note ?? '',
+      data_revisao: reviews[recordKey(item)]?.updatedAt ?? '',
+      revisao_desatualizada: reviews[recordKey(item)] ? reviews[recordKey(item)].fingerprint !== fingerprint(item) : false,
       ...Object.fromEntries(methodKeys.flatMap(key => [
         [`utilizado_${key}`, item.methods[key].evaluated],
         [`anomalia_${key}`, item.methods[key].evaluated ? item.methods[key].anomaly : ''],
@@ -528,9 +536,11 @@ function EmptyState() {
 }
 
 function MethodFlags({ record }: { record: FuelRecord }) {
+  const { reviews } = useReviews()
+  const review = reviews[recordKey(record)]
   const flagged = methodKeys.filter(key => record.methods[key].evaluated && record.methods[key].anomaly)
   const evaluated = methodKeys.filter(key => record.methods[key].evaluated).length
-  return <div className="flex flex-wrap gap-1">{flagged.map(key => <Badge key={key} variant="outline" className="border-amber-200 bg-amber-50 text-[10px] text-amber-800">{methodLabels[key]}</Badge>)}<span className="block w-full text-[11px] text-muted-foreground">{evaluated ? `${flagged.length} sinalizam / ${evaluated} avaliados` : 'Não avaliado'}</span></div>
+  return <div className="flex flex-wrap gap-1">{flagged.map(key => <Badge key={key} variant="outline" className="border-amber-200 bg-amber-50 text-[10px] text-amber-800">{methodLabels[key]}</Badge>)}<span className="block w-full text-[11px] text-muted-foreground">{evaluated ? `${flagged.length} sinalizam / ${evaluated} avaliados` : 'Não avaliado'}</span>{review && <Badge variant="outline" className="text-[10px]">{review.fingerprint === fingerprint(record) ? reviewLabels[review.status] : 'Revisão desatualizada'}</Badge>}</div>
 }
 
 function RecordsTable({ records }: { records: FuelRecord[] }) {
@@ -644,6 +654,7 @@ function RecordDetails({ record }: { record: FuelRecord }) {
           {record.hasFewRecords && <TriangleAlert className="mt-0.5 size-4 shrink-0" />}
           <p><strong>{record.seriesRecordCount} registros</strong> na série deste posto e produto. {record.hasFewRecords ? 'A série possui poucos dados para uma comparação histórica confiável.' : 'A série possui histórico suficiente para as comparações iniciais.'}</p>
         </div>
+        <RecordReview record={record} />
       </DialogContent>
     </Dialog>
   )
@@ -725,5 +736,5 @@ export default function FuelApp() {
     return () => controller.abort()
   }, [attempt])
   if (!records) return <main className="mx-auto max-w-xl space-y-4 p-8"><h1 className="text-xl font-semibold">Radar de Preços</h1>{error ? <><p role="alert">{error}</p><Button onClick={() => { setError(''); setAttempt(value => value + 1) }}>Tentar novamente</Button></> : <p role="status">Carregando preços e comparação dos métodos…</p>}</main>
-  return <App fuelRecords={records} />
+  return <ReviewProvider><App fuelRecords={records} /></ReviewProvider>
 }
