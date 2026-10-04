@@ -1,0 +1,29 @@
+Quantidade de registros:  4816
+Quantidade de postos (CNPJs únicos): 32
+Postos de Gasolina  <StringArray>
+[                               'AUTO POSTO MAR AZUL LTDA',
+                               'VASPETRO COMBUSTIVEL LTDA',
+                                   'PETROX COMERCIAL LTDA',
+                                     'RPB AUTO POSTO LTDA',
+                    'ALPHA COMERCIAL DE COMBUSTIVEIS LTDA',
+                                     'POSTO PIRANEMA LTDA',
+                     'L. V. COMERCIO DE COMBUSTIVEIS LTDA',
+                                         'GAMA E CIA LTDA',
+ 'TYRESOLES DE SERGIPE INDUSTRIA COMERCIO E SERVICOS LTDA',
+                                       'AMARAL & CIA LTDA',
+                                'AUTO POSTOS ANDRADE LTDA',
+                              'KLEBER SANTOS BATISTA LTDA',
+                                   'POSTO CARMOPOLIS LTDA',
+                            'J. L. OLIVEIRA & BARROS LTDA',
+                                  'COMERCIAL MARIVAN LTDA',
+                        'LUBRIFICANTES E ACESSÓRIOS LTDA.',
+                                      'POSTO ARIBE EIRELI',
+                     'LIDER COMERCIO DE COMBUSTIVEIS LTDA',
+                          'REDE DE POSTOS PRESIDENTE LTDA',
+                                   'CWS COMBUSTIVEIS LTDA']
+Length: 20, dtype: str
+<StringArray>
+['DIESEL S10', 'ETANOL', 'GASOLINA', 'GASOLINA ADITIVADA', 'GNV', 'DIESEL']
+Length: 6, dtype: str
+Data Inicial da Coleta: 09/07/2024
+Data Final da Coleta: 30/06/2026

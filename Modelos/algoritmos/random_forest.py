@@ -1,8 +1,5 @@
-import numpy as np
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
@@ -21,7 +18,6 @@ FEATURES_NUMERICAS = [
     "media_historica_posto",
     "mediana_historica_posto",
     "mediana_municipal",
-    "total_registros_serie",
 ]
 FEATURES_CATEGORICAS = ["Produto", "Bairro", "Bandeira"]
 COLUNAS_MODELO = FEATURES_NUMERICAS + FEATURES_CATEGORICAS + [TARGET]
@@ -53,33 +49,11 @@ def criar_pipeline():
 
 
 def executar_random_forest(df_modelo):
-    x = df_modelo[FEATURES_NUMERICAS + FEATURES_CATEGORICAS]
-    y = df_modelo[TARGET]
-
-    x_treino, x_teste, y_treino, y_teste = train_test_split(
-        x,
-        y,
-        test_size=0.2,
-        random_state=RANDOM_STATE,
+    from avaliacao_temporal import avaliar_janelas
+    return avaliar_janelas(
+        df_modelo, FEATURES_NUMERICAS + FEATURES_CATEGORICAS,
+        TARGET, criar_pipeline, PERCENTIL_ANOMALIA,
     )
-
-    pipeline = criar_pipeline()
-    pipeline.fit(x_treino, y_treino)
-
-    predicoes_teste = pipeline.predict(x_teste)
-    mse = mean_squared_error(y_teste, predicoes_teste)
-    metricas = {
-        "mae": mean_absolute_error(y_teste, predicoes_teste),
-        "rmse": float(np.sqrt(mse)),
-        "r2": r2_score(y_teste, predicoes_teste),
-    }
-
-    predicoes = pipeline.predict(x)
-    erros = np.abs(y.to_numpy() - predicoes)
-    limite_anomalia = float(np.quantile(erros, PERCENTIL_ANOMALIA))
-    anomalias = erros >= limite_anomalia
-
-    return pipeline, predicoes, erros, anomalias, limite_anomalia, metricas
 
 
 def aplicar_resultados(df_original, indices_modelo, predicoes, erros, anomalias):
@@ -104,12 +78,12 @@ def exibir_resultados(df_resultado, limite_anomalia, metricas):
     print("\nResultados do Random Forest:")
     print("Registros utilizados pelo modelo:", usados)
     print("Quantidade de possiveis anomalias:", quantidade_anomalias)
-    print(f"Limite de erro absoluto para anomalia: {limite_anomalia:.4f}")
+    print("Janelas temporais avaliadas:", len(metricas["janelas"]))
 
     print("\nMetricas no conjunto de teste:")
     print(f"MAE: {metricas['mae']:.4f}")
     print(f"RMSE: {metricas['rmse']:.4f}")
-    print(f"R2: {metricas['r2']:.4f}")
+    print("R?:", metricas["r2"])
 
     colunas_amostra = [
         "Revenda",
@@ -143,18 +117,20 @@ def main():
     print("Quantidade de registros aptos para o modelo:", len(df_modelo))
     print("Quantidade de registros removidos da analise:", int((~mascara_apta).sum()))
 
-    _, predicoes, erros, anomalias, limite_anomalia, metricas = executar_random_forest(
+    _, predicoes, erros, anomalias, limite_anomalia, metricas, indices_teste = executar_random_forest(
         df_modelo
     )
 
     df_resultado = aplicar_resultados(
         df,
-        df_modelo.index,
+        indices_teste,
         predicoes,
         erros,
         anomalias,
     )
 
+    df_resultado["limite_erro_random_forest"] = float("nan")
+    df_resultado.loc[indices_teste, "limite_erro_random_forest"] = limite_anomalia
     exibir_resultados(df_resultado, limite_anomalia, metricas)
     quantidade_anomalias = int(df_resultado["anomalia_random_forest"].sum())
     caminho_txt = salvar_numero_txt(

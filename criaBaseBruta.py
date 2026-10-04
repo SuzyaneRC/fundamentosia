@@ -7,6 +7,8 @@ import pandas as pd
 # Define a pasta de entrada e garante uma ordem determinística para os arquivos.
 CAMINHO = Path("planilhas")
 ARQUIVOS = sorted(CAMINHO.glob("*.csv"))
+if not ARQUIVOS:
+    raise FileNotFoundError("Nenhum CSV da ANP encontrado na pasta planilhas.")
 
 # Mantém somente as colunas necessárias para a análise dos preços.
 COLUNAS_ANALISE = [
@@ -79,6 +81,9 @@ lista = []
 for arq in ARQUIVOS:
     # Evita inferências de tipo inconsistentes em arquivos grandes.
     df = pd.read_csv(arq, encoding="utf-8", sep=";", low_memory=False)
+    print(f"Fonte: {arq.name}; registros: {len(df)}; separador: ; ; codificação: UTF-8")
+    print("Tipos iniciais:")
+    print(df.dtypes.to_string())
     lista.append(df)
 
 # Une todas as planilhas em uma única tabela de trabalho.
@@ -102,6 +107,10 @@ dadosAracaju["CNPJ da Revenda"] = (
 
 # Padroniza os nomes dos produtos e transforma as datas em valores comparáveis.
 dadosAracaju["Produto"] = dadosAracaju["Produto"].map(padronizar_produto)
+combustiveis_automotivos = {"GASOLINA", "GASOLINA ADITIVADA", "ETANOL", "DIESEL", "DIESEL S10", "GNV"}
+fora_escopo = ~dadosAracaju["Produto"].isin(combustiveis_automotivos)
+print("Produtos fora do escopo automotivo removidos:", int(fora_escopo.sum()))
+dadosAracaju = dadosAracaju.loc[~fora_escopo].copy()
 dadosAracaju["Data da Coleta"] = pd.to_datetime(
     dadosAracaju["Data da Coleta"],
     dayfirst=True,

@@ -1,13 +1,13 @@
 import pandas as pd
 
 # Lê a base limpa usando o mesmo separador e formato decimal da exportação.
-df = pd.read_csv("base_limpa_aracaju.csv", sep=";", decimal=",")
+df = pd.read_csv("base_limpa_aracaju.csv", sep=";", decimal=",", dtype={"CNPJ da Revenda": "string"})
 
 # Imprime a quantidade de registros.
 print("Quantidade de registros: ", len(df))
 
 # Imprime a quantidade de postos sem repetir os nomes das revendas.
-print("Quantidade dos postos de Gasolina ", len(df["Revenda"].unique()))
+print("Quantidade de postos (CNPJs únicos):", df["CNPJ da Revenda"].nunique())
 
 # Imprime os nomes dos postos sem repetições.
 print("Postos de Gasolina ", df["Revenda"].unique())

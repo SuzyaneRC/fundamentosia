@@ -1,7 +1,8 @@
 import Papa from 'papaparse'
-import csvText from '../../../dados_aracaju_processados.csv?raw'
+import csvUrl from '../../../dados_aracaju_processados.csv?url'
 
 type CsvRow = {
+  [key: string]: string | undefined
   Revenda: string
   'CNPJ da Revenda': string
   Bairro: string
@@ -25,6 +26,11 @@ type CsvRow = {
 
 // Representa um registro já convertido para os tipos utilizados pela interface.
 export type FuelRecord = {
+  forestPrediction: number | null
+  forestThreshold: number | null
+  forestWindow: string
+  baselinePrediction: number | null
+  methods: Record<MethodKey, { evaluated: boolean; anomaly: boolean; score: number | null }>
   id: number
   station: string
   cnpj: string
@@ -48,6 +54,11 @@ export type FuelRecord = {
   hasFewRecords: boolean
 }
 
+export const methodLabels = { regressao: 'Baseline', isolation_forest: 'Isolation Forest', kmeans: 'K-Means', random_forest: 'Random Forest' }
+export type MethodKey = keyof typeof methodLabels
+export const methodKeys = Object.keys(methodLabels) as MethodKey[]
+const scoreColumns = { regressao: 'pontuacao_anomalia', isolation_forest: 'score_isolation_forest', kmeans: 'score_kmeans', random_forest: 'erro_abs_random_forest' }
+
 // Converte a data brasileira sem aplicar deslocamento de fuso horário.
 function parseDate(value: string) {
   const [day, month, year] = value.split('/').map(Number)
@@ -62,6 +73,7 @@ function parseOptionalNumber(value?: string) {
 }
 
 // Lê a base limpa gerada pelo script Python e preserva o CNPJ como texto.
+export function parseFuelRecords(csvText: string): FuelRecord[] {
 const parsed = Papa.parse<CsvRow>(csvText, {
   delimiter: ';',
   header: true,
@@ -70,9 +82,22 @@ const parsed = Papa.parse<CsvRow>(csvText, {
 })
 
 // Normaliza os nomes das propriedades e descarta linhas sem preço válido.
-export const fuelRecords: FuelRecord[] = parsed.data
+const required = ['Revenda', 'CNPJ da Revenda', 'Produto', 'Data da Coleta', 'Valor de Venda', ...methodKeys.map(key => `utilizado_${key}`)]
+if (parsed.errors.length || required.some(key => !parsed.meta.fields?.includes(key))) {
+  throw new Error('A base de preços está incompleta ou possui formato inválido. Gere novamente o pipeline.')
+}
+return parsed.data
   .map((row, index) => ({
+    methods: Object.fromEntries(methodKeys.map((key) => [key, {
+      evaluated: row[`utilizado_${key}`]?.toLowerCase() === 'true',
+      anomaly: row[`anomalia_${key}`]?.toLowerCase() === 'true',
+      score: parseOptionalNumber(row[scoreColumns[key]]),
+    }])) as FuelRecord['methods'],
     id: index,
+    forestPrediction: parseOptionalNumber(row.previsao_random_forest),
+    forestThreshold: parseOptionalNumber(row.limite_erro_random_forest),
+    forestWindow: row.janela_random_forest ?? '',
+    baselinePrediction: parseOptionalNumber(row.preco_estimado),
     station: row.Revenda?.trim(),
     cnpj: row['CNPJ da Revenda']?.trim(),
     neighborhood: row.Bairro?.trim(),
@@ -94,4 +119,13 @@ export const fuelRecords: FuelRecord[] = parsed.data
     seriesRecordCount: Number(row.total_registros_serie ?? 0),
     hasFewRecords: row.poucos_registros?.toLowerCase() === 'true',
   }))
-  .filter((record) => record.station && record.product && Number.isFinite(record.price))
+  .filter((record) => record.station && record.cnpj && record.product && Number.isFinite(record.price) && record.price > 0 && Number.isFinite(record.date.getTime()))
+}
+
+export async function loadFuelRecords(signal?: AbortSignal) {
+  const response = await fetch(csvUrl, { signal })
+  if (!response.ok) throw new Error('Não foi possível carregar a base de preços.')
+  const records = parseFuelRecords(await response.text())
+  if (!records.length) throw new Error('A base de preços não possui registros válidos.')
+  return records
+}

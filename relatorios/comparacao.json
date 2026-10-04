@@ -1,0 +1,1112 @@
+{
+  "metodos": {
+    "regressao": {
+      "nome": "Baseline",
+      "avaliados": 4801,
+      "sinalizados": 201
+    },
+    "isolation_forest": {
+      "nome": "Isolation Forest",
+      "avaliados": 4604,
+      "sinalizados": 232
+    },
+    "kmeans": {
+      "nome": "K-Means",
+      "avaliados": 4604,
+      "sinalizados": 235
+    },
+    "random_forest": {
+      "nome": "Random Forest",
+      "avaliados": 1718,
+      "sinalizados": 491
+    }
+  },
+  "comparacoes": [
+    {
+      "metodo_a": "regressao",
+      "metodo_b": "isolation_forest",
+      "avaliados_em_comum": 4604,
+      "sinalizados_por_ambos": 71,
+      "uniao_sinalizados": 351,
+      "concordancia": 0.9391833188531712,
+      "jaccard": 0.2022792022792023
+    },
+    {
+      "metodo_a": "regressao",
+      "metodo_b": "kmeans",
+      "avaliados_em_comum": 4604,
+      "sinalizados_por_ambos": 36,
+      "uniao_sinalizados": 389,
+      "concordancia": 0.9233275412684622,
+      "jaccard": 0.09254498714652956
+    },
+    {
+      "metodo_a": "regressao",
+      "metodo_b": "random_forest",
+      "avaliados_em_comum": 1718,
+      "sinalizados_por_ambos": 68,
+      "uniao_sinalizados": 528,
+      "concordancia": 0.7322467986030268,
+      "jaccard": 0.12878787878787878
+    },
+    {
+      "metodo_a": "isolation_forest",
+      "metodo_b": "kmeans",
+      "avaliados_em_comum": 4604,
+      "sinalizados_por_ambos": 147,
+      "uniao_sinalizados": 320,
+      "concordancia": 0.9624239791485665,
+      "jaccard": 0.459375
+    },
+    {
+      "metodo_a": "isolation_forest",
+      "metodo_b": "random_forest",
+      "avaliados_em_comum": 1718,
+      "sinalizados_por_ambos": 113,
+      "uniao_sinalizados": 523,
+      "concordancia": 0.7613504074505238,
+      "jaccard": 0.21606118546845124
+    },
+    {
+      "metodo_a": "kmeans",
+      "metodo_b": "random_forest",
+      "avaliados_em_comum": 1718,
+      "sinalizados_por_ambos": 78,
+      "uniao_sinalizados": 530,
+      "concordancia": 0.7369033760186263,
+      "jaccard": 0.1471698113207547
+    }
+  ],
+  "random_forest": {
+    "mae": 0.20438131063251672,
+    "rmse": 0.32584436408916856,
+    "r2": 0.8742932598539683,
+    "teste": 1718,
+    "janelas": [
+      {
+        "produto": "DIESEL S10",
+        "janela": 1,
+        "treino": 193,
+        "calibracao": 37,
+        "teste": 37,
+        "fim_treino": "2025-04-08",
+        "inicio_calibracao": "2025-04-15",
+        "fim_calibracao": "2025-06-16",
+        "inicio_teste": "2025-06-24",
+        "fim_teste": "2025-08-27",
+        "limite_erro": 0.3241914285714143,
+        "mae": 0.07475540540540414,
+        "rmse": 0.09470371614330399,
+        "sinalizados": 0
+      },
+      {
+        "produto": "DIESEL S10",
+        "janela": 2,
+        "treino": 230,
+        "calibracao": 37,
+        "teste": 35,
+        "fim_treino": "2025-06-16",
+        "inicio_calibracao": "2025-06-24",
+        "fim_calibracao": "2025-08-27",
+        "inicio_teste": "2025-09-02",
+        "fim_teste": "2025-11-04",
+        "limite_erro": 0.013400000000012286,
+        "mae": 0.018817857142863634,
+        "rmse": 0.0345835058228622,
+        "sinalizados": 14
+      },
+      {
+        "produto": "DIESEL S10",
+        "janela": 3,
+        "treino": 267,
+        "calibracao": 35,
+        "teste": 22,
+        "fim_treino": "2025-08-27",
+        "inicio_calibracao": "2025-09-02",
+        "fim_calibracao": "2025-11-04",
+        "inicio_teste": "2025-11-11",
+        "fim_teste": "2025-12-29",
+        "limite_erro": 0.05087499999999423,
+        "mae": 0.03225568181818819,
+        "rmse": 0.06730063170884007,
+        "sinalizados": 2
+      },
+      {
+        "produto": "DIESEL S10",
+        "janela": 4,
+        "treino": 302,
+        "calibracao": 22,
+        "teste": 31,
+        "fim_treino": "2025-11-04",
+        "inicio_calibracao": "2025-11-11",
+        "fim_calibracao": "2025-12-29",
+        "inicio_teste": "2026-01-05",
+        "fim_teste": "2026-03-20",
+        "limite_erro": 0.03530000000000122,
+        "mae": 0.14110080645161527,
+        "rmse": 0.2854535632889453,
+        "sinalizados": 14
+      },
+      {
+        "produto": "DIESEL S10",
+        "janela": 5,
+        "treino": 324,
+        "calibracao": 31,
+        "teste": 24,
+        "fim_treino": "2025-12-29",
+        "inicio_calibracao": "2026-01-05",
+        "fim_calibracao": "2026-03-20",
+        "inicio_teste": "2026-03-25",
+        "fim_teste": "2026-05-26",
+        "limite_erro": 0.7492500000000075,
+        "mae": 0.624366666666677,
+        "rmse": 0.6399327681157969,
+        "sinalizados": 4
+      },
+      {
+        "produto": "DIESEL S10",
+        "janela": 6,
+        "treino": 355,
+        "calibracao": 24,
+        "teste": 14,
+        "fim_treino": "2026-03-20",
+        "inicio_calibracao": "2026-03-25",
+        "fim_calibracao": "2026-05-26",
+        "inicio_teste": "2026-06-03",
+        "fim_teste": "2026-06-30",
+        "limite_erro": 0.9009850000000151,
+        "mae": 0.34358571428573054,
+        "rmse": 0.38954489059122,
+        "sinalizados": 0
+      },
+      {
+        "produto": "ETANOL",
+        "janela": 1,
+        "treino": 610,
+        "calibracao": 128,
+        "teste": 92,
+        "fim_treino": "2025-06-03",
+        "inicio_calibracao": "2025-06-09",
+        "fim_calibracao": "2025-08-27",
+        "inicio_teste": "2025-09-02",
+        "fim_teste": "2025-11-04",
+        "limite_erro": 0.0491500000000018,
+        "mae": 0.017194565217392647,
+        "rmse": 0.028166636330490557,
+        "sinalizados": 6
+      },
+      {
+        "produto": "ETANOL",
+        "janela": 2,
+        "treino": 738,
+        "calibracao": 92,
+        "teste": 49,
+        "fim_treino": "2025-08-27",
+        "inicio_calibracao": "2025-09-02",
+        "fim_calibracao": "2025-11-04",
+        "inicio_teste": "2025-11-05",
+        "fim_teste": "2025-12-29",
+        "limite_erro": 0.0821174999999982,
+        "mae": 0.023039795918365056,
+        "rmse": 0.05133937552787233,
+        "sinalizados": 5
+      },
+      {
+        "produto": "ETANOL",
+        "janela": 3,
+        "treino": 830,
+        "calibracao": 49,
+        "teste": 57,
+        "fim_treino": "2025-11-04",
+        "inicio_calibracao": "2025-11-05",
+        "fim_calibracao": "2025-12-29",
+        "inicio_teste": "2026-01-06",
+        "fim_teste": "2026-03-09",
+        "limite_erro": 0.15257000000000273,
+        "mae": 0.05370701754385962,
+        "rmse": 0.07740407872656768,
+        "sinalizados": 4
+      },
+      {
+        "produto": "ETANOL",
+        "janela": 4,
+        "treino": 879,
+        "calibracao": 57,
+        "teste": 64,
+        "fim_treino": "2025-12-29",
+        "inicio_calibracao": "2026-01-06",
+        "fim_calibracao": "2026-03-09",
+        "inicio_teste": "2026-03-20",
+        "fim_teste": "2026-04-29",
+        "limite_erro": 0.17030800000000884,
+        "mae": 0.3932664062500023,
+        "rmse": 0.4744366957986223,
+        "sinalizados": 41
+      },
+      {
+        "produto": "ETANOL",
+        "janela": 5,
+        "treino": 936,
+        "calibracao": 64,
+        "teste": 69,
+        "fim_treino": "2026-03-09",
+        "inicio_calibracao": "2026-03-20",
+        "fim_calibracao": "2026-04-29",
+        "inicio_teste": "2026-05-04",
+        "fim_teste": "2026-06-16",
+        "limite_erro": 0.7610500000000027,
+        "mae": 0.65339130434783,
+        "rmse": 0.6578272531599804,
+        "sinalizados": 17
+      },
+      {
+        "produto": "ETANOL",
+        "janela": 6,
+        "treino": 1000,
+        "calibracao": 69,
+        "teste": 18,
+        "fim_treino": "2026-04-29",
+        "inicio_calibracao": "2026-05-04",
+        "fim_calibracao": "2026-06-16",
+        "inicio_teste": "2026-06-23",
+        "fim_teste": "2026-06-30",
+        "limite_erro": 0.09119000000000471,
+        "mae": 0.0657305555555537,
+        "rmse": 0.07138266693595093,
+        "sinalizados": 1
+      },
+      {
+        "produto": "GASOLINA",
+        "janela": 1,
+        "treino": 804,
+        "calibracao": 200,
+        "teste": 152,
+        "fim_treino": "2025-06-09",
+        "inicio_calibracao": "2025-06-16",
+        "fim_calibracao": "2025-09-02",
+        "inicio_teste": "2025-09-09",
+        "fim_teste": "2025-11-05",
+        "limite_erro": 0.01679999999999282,
+        "mae": 0.013935526315793213,
+        "rmse": 0.023630223594055633,
+        "sinalizados": 37
+      },
+      {
+        "produto": "GASOLINA",
+        "janela": 2,
+        "treino": 1004,
+        "calibracao": 152,
+        "teste": 91,
+        "fim_treino": "2025-09-02",
+        "inicio_calibracao": "2025-09-09",
+        "fim_calibracao": "2025-11-05",
+        "inicio_teste": "2025-11-11",
+        "fim_teste": "2025-12-30",
+        "limite_erro": 0.06586749999999206,
+        "mae": 0.03213571428571301,
+        "rmse": 0.03898611580132803,
+        "sinalizados": 0
+      },
+      {
+        "produto": "GASOLINA",
+        "janela": 3,
+        "treino": 1156,
+        "calibracao": 91,
+        "teste": 64,
+        "fim_treino": "2025-11-05",
+        "inicio_calibracao": "2025-11-11",
+        "fim_calibracao": "2025-12-30",
+        "inicio_teste": "2026-01-05",
+        "fim_teste": "2026-02-24",
+        "limite_erro": 0.03175000000000949,
+        "mae": 0.009421874999999719,
+        "rmse": 0.014255664992382731,
+        "sinalizados": 6
+      },
+      {
+        "produto": "GASOLINA",
+        "janela": 4,
+        "treino": 1247,
+        "calibracao": 64,
+        "teste": 104,
+        "fim_treino": "2025-12-30",
+        "inicio_calibracao": "2026-01-05",
+        "fim_calibracao": "2026-02-24",
+        "inicio_teste": "2026-03-04",
+        "fim_teste": "2026-04-23",
+        "limite_erro": 0.011632500000019695,
+        "mae": 0.43089230769228565,
+        "rmse": 0.4937912195062929,
+        "sinalizados": 91
+      },
+      {
+        "produto": "GASOLINA",
+        "janela": 5,
+        "treino": 1311,
+        "calibracao": 104,
+        "teste": 111,
+        "fim_treino": "2026-02-24",
+        "inicio_calibracao": "2026-03-04",
+        "fim_calibracao": "2026-04-23",
+        "inicio_teste": "2026-04-24",
+        "fim_teste": "2026-06-03",
+        "limite_erro": 0.5999999999999659,
+        "mae": 0.6138738738738397,
+        "rmse": 0.6359486069098577,
+        "sinalizados": 46
+      },
+      {
+        "produto": "GASOLINA",
+        "janela": 6,
+        "treino": 1415,
+        "calibracao": 111,
+        "teste": 62,
+        "fim_treino": "2026-04-23",
+        "inicio_calibracao": "2026-04-24",
+        "fim_calibracao": "2026-06-03",
+        "inicio_teste": "2026-06-08",
+        "fim_teste": "2026-06-30",
+        "limite_erro": 0.6292249999999942,
+        "mae": 0.4876008064516199,
+        "rmse": 0.4968493214099117,
+        "sinalizados": 1
+      },
+      {
+        "produto": "GASOLINA ADITIVADA",
+        "janela": 1,
+        "treino": 627,
+        "calibracao": 153,
+        "teste": 125,
+        "fim_treino": "2025-06-09",
+        "inicio_calibracao": "2025-06-16",
+        "fim_calibracao": "2025-09-02",
+        "inicio_teste": "2025-09-09",
+        "fim_teste": "2025-11-05",
+        "limite_erro": 0.11230999999999534,
+        "mae": 0.04482599999999798,
+        "rmse": 0.06750653760932963,
+        "sinalizados": 20
+      },
+      {
+        "produto": "GASOLINA ADITIVADA",
+        "janela": 2,
+        "treino": 780,
+        "calibracao": 125,
+        "teste": 77,
+        "fim_treino": "2025-09-02",
+        "inicio_calibracao": "2025-09-09",
+        "fim_calibracao": "2025-11-05",
+        "inicio_teste": "2025-11-11",
+        "fim_teste": "2025-12-30",
+        "limite_erro": 0.11563999999998487,
+        "mae": 0.05722662337662396,
+        "rmse": 0.06978590520251873,
+        "sinalizados": 6
+      },
+      {
+        "produto": "GASOLINA ADITIVADA",
+        "janela": 3,
+        "treino": 905,
+        "calibracao": 77,
+        "teste": 59,
+        "fim_treino": "2025-11-05",
+        "inicio_calibracao": "2025-11-11",
+        "fim_calibracao": "2025-12-30",
+        "inicio_teste": "2026-01-05",
+        "fim_teste": "2026-03-04",
+        "limite_erro": 0.06054000000000511,
+        "mae": 0.047467796610167236,
+        "rmse": 0.07643722138826889,
+        "sinalizados": 10
+      },
+      {
+        "produto": "GASOLINA ADITIVADA",
+        "janela": 4,
+        "treino": 982,
+        "calibracao": 59,
+        "teste": 83,
+        "fim_treino": "2025-12-30",
+        "inicio_calibracao": "2026-01-05",
+        "fim_calibracao": "2026-03-04",
+        "inicio_teste": "2026-03-09",
+        "fim_teste": "2026-04-24",
+        "limite_erro": 0.13629499999998604,
+        "mae": 0.3545224899598448,
+        "rmse": 0.38663975704382963,
+        "sinalizados": 80
+      },
+      {
+        "produto": "GASOLINA ADITIVADA",
+        "janela": 5,
+        "treino": 1041,
+        "calibracao": 83,
+        "teste": 89,
+        "fim_treino": "2026-03-04",
+        "inicio_calibracao": "2026-03-09",
+        "fim_calibracao": "2026-04-24",
+        "inicio_teste": "2026-04-27",
+        "fim_teste": "2026-06-08",
+        "limite_erro": 0.5756500000000067,
+        "mae": 0.42399887640450135,
+        "rmse": 0.48055678890174514,
+        "sinalizados": 23
+      },
+      {
+        "produto": "GASOLINA ADITIVADA",
+        "janela": 6,
+        "treino": 1124,
+        "calibracao": 89,
+        "teste": 50,
+        "fim_treino": "2026-04-24",
+        "inicio_calibracao": "2026-04-27",
+        "fim_calibracao": "2026-06-08",
+        "inicio_teste": "2026-06-09",
+        "fim_teste": "2026-06-30",
+        "limite_erro": 0.3189999999999995,
+        "mae": 0.15290900000000301,
+        "rmse": 0.1727606733316397,
+        "sinalizados": 2
+      },
+      {
+        "produto": "GNV",
+        "janela": 1,
+        "treino": 108,
+        "calibracao": 26,
+        "teste": 27,
+        "fim_treino": "2025-04-15",
+        "inicio_calibracao": "2025-04-22",
+        "fim_calibracao": "2025-06-16",
+        "inicio_teste": "2025-06-24",
+        "fim_teste": "2025-08-19",
+        "limite_erro": 0.10505000000000764,
+        "mae": 0.09470370370370056,
+        "rmse": 0.11884392192189394,
+        "sinalizados": 11
+      },
+      {
+        "produto": "GNV",
+        "janela": 2,
+        "treino": 134,
+        "calibracao": 27,
+        "teste": 26,
+        "fim_treino": "2025-06-16",
+        "inicio_calibracao": "2025-06-24",
+        "fim_calibracao": "2025-08-19",
+        "inicio_teste": "2025-09-02",
+        "fim_teste": "2025-10-28",
+        "limite_erro": 0.2931600000000058,
+        "mae": 0.11912499999998333,
+        "rmse": 0.1191394468195046,
+        "sinalizados": 0
+      },
+      {
+        "produto": "GNV",
+        "janela": 3,
+        "treino": 161,
+        "calibracao": 26,
+        "teste": 23,
+        "fim_treino": "2025-08-19",
+        "inicio_calibracao": "2025-09-02",
+        "fim_calibracao": "2025-10-28",
+        "inicio_teste": "2025-11-04",
+        "fim_teste": "2026-01-05",
+        "limite_erro": 0.000550000000022699,
+        "mae": 0.000550000000022699,
+        "rmse": 0.000550000000022699,
+        "sinalizados": 23
+      },
+      {
+        "produto": "GNV",
+        "janela": 4,
+        "treino": 187,
+        "calibracao": 23,
+        "teste": 24,
+        "fim_treino": "2025-10-28",
+        "inicio_calibracao": "2025-11-04",
+        "fim_calibracao": "2026-01-05",
+        "inicio_teste": "2026-01-20",
+        "fim_teste": "2026-04-24",
+        "limite_erro": 2.3092638912203256e-14,
+        "mae": 0.0733333333333565,
+        "rmse": 0.07659416862052922,
+        "sinalizados": 22
+      },
+      {
+        "produto": "GNV",
+        "janela": 5,
+        "treino": 210,
+        "calibracao": 24,
+        "teste": 28,
+        "fim_treino": "2026-01-05",
+        "inicio_calibracao": "2026-01-20",
+        "fim_calibracao": "2026-04-24",
+        "inicio_teste": "2026-04-29",
+        "fim_teste": "2026-06-09",
+        "limite_erro": 0.08000000000002316,
+        "mae": 0.049401785714274525,
+        "rmse": 0.06498732912212839,
+        "sinalizados": 5
+      },
+      {
+        "produto": "GNV",
+        "janela": 6,
+        "treino": 234,
+        "calibracao": 28,
+        "teste": 11,
+        "fim_treino": "2026-04-24",
+        "inicio_calibracao": "2026-04-29",
+        "fim_calibracao": "2026-06-09",
+        "inicio_teste": "2026-06-16",
+        "fim_teste": "2026-06-30",
+        "limite_erro": 0.05324999999998849,
+        "mae": 0.032604545454533736,
+        "rmse": 0.03331714341677171,
+        "sinalizados": 0
+      }
+    ],
+    "inicio_teste": "2025-06-24"
+  },
+  "por_produto": {
+    "DIESEL": {
+      "regressao": {
+        "avaliados": 31,
+        "sinalizados": 0
+      },
+      "isolation_forest": {
+        "avaliados": 0,
+        "sinalizados": 0
+      },
+      "kmeans": {
+        "avaliados": 0,
+        "sinalizados": 0
+      },
+      "random_forest": {
+        "avaliados": 0,
+        "sinalizados": 0
+      }
+    },
+    "DIESEL S10": {
+      "regressao": {
+        "avaliados": 423,
+        "sinalizados": 13
+      },
+      "isolation_forest": {
+        "avaliados": 393,
+        "sinalizados": 20
+      },
+      "kmeans": {
+        "avaliados": 393,
+        "sinalizados": 20
+      },
+      "random_forest": {
+        "avaliados": 163,
+        "sinalizados": 34
+      }
+    },
+    "ETANOL": {
+      "regressao": {
+        "avaliados": 1122,
+        "sinalizados": 29
+      },
+      "isolation_forest": {
+        "avaliados": 1087,
+        "sinalizados": 55
+      },
+      "kmeans": {
+        "avaliados": 1087,
+        "sinalizados": 55
+      },
+      "random_forest": {
+        "avaliados": 349,
+        "sinalizados": 74
+      }
+    },
+    "GASOLINA": {
+      "regressao": {
+        "avaliados": 1628,
+        "sinalizados": 92
+      },
+      "isolation_forest": {
+        "avaliados": 1588,
+        "sinalizados": 80
+      },
+      "kmeans": {
+        "avaliados": 1588,
+        "sinalizados": 81
+      },
+      "random_forest": {
+        "avaliados": 584,
+        "sinalizados": 181
+      }
+    },
+    "GASOLINA ADITIVADA": {
+      "regressao": {
+        "avaliados": 1300,
+        "sinalizados": 67
+      },
+      "isolation_forest": {
+        "avaliados": 1263,
+        "sinalizados": 64
+      },
+      "kmeans": {
+        "avaliados": 1263,
+        "sinalizados": 65
+      },
+      "random_forest": {
+        "avaliados": 483,
+        "sinalizados": 141
+      }
+    },
+    "GNV": {
+      "regressao": {
+        "avaliados": 297,
+        "sinalizados": 0
+      },
+      "isolation_forest": {
+        "avaliados": 273,
+        "sinalizados": 13
+      },
+      "kmeans": {
+        "avaliados": 273,
+        "sinalizados": 14
+      },
+      "random_forest": {
+        "avaliados": 139,
+        "sinalizados": 61
+      }
+    }
+  },
+  "random_forest_por_mes": [
+    {
+      "produto": "DIESEL S10",
+      "mes": "2025-06",
+      "avaliados": 8,
+      "sinalizados": 0,
+      "mae": 0.07609999999999761
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2025-07",
+      "avaliados": 16,
+      "sinalizados": 0,
+      "mae": 0.07505937499999749
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2025-08",
+      "avaliados": 13,
+      "sinalizados": 0,
+      "mae": 0.07355384615384711
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2025-09",
+      "avaliados": 18,
+      "sinalizados": 7,
+      "mae": 0.022437500000001345
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2025-10",
+      "avaliados": 14,
+      "sinalizados": 6,
+      "mae": 0.016535714285725738
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2025-11",
+      "avaliados": 11,
+      "sinalizados": 1,
+      "mae": 0.01090454545455678
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2025-12",
+      "avaliados": 14,
+      "sinalizados": 2,
+      "mae": 0.04378035714286131
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2026-01",
+      "avaliados": 12,
+      "sinalizados": 1,
+      "mae": 0.011304166666669113
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2026-02",
+      "avaliados": 7,
+      "sinalizados": 3,
+      "mae": 0.018950000000000626
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2026-03",
+      "avaliados": 16,
+      "sinalizados": 10,
+      "mae": 0.4107453125000042
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2026-04",
+      "avaliados": 10,
+      "sinalizados": 3,
+      "mae": 0.7384450000000113
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2026-05",
+      "avaliados": 10,
+      "sinalizados": 1,
+      "mae": 0.5134250000000107
+    },
+    {
+      "produto": "DIESEL S10",
+      "mes": "2026-06",
+      "avaliados": 14,
+      "sinalizados": 0,
+      "mae": 0.34358571428573054
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2025-09",
+      "avaliados": 49,
+      "sinalizados": 0,
+      "mae": 0.012321428571430143
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2025-10",
+      "avaliados": 38,
+      "sinalizados": 5,
+      "mae": 0.022814473684212213
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2025-11",
+      "avaliados": 35,
+      "sinalizados": 6,
+      "mae": 0.029179999999997337
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2025-12",
+      "avaliados": 19,
+      "sinalizados": 0,
+      "mae": 0.01151842105262965
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2026-01",
+      "avaliados": 17,
+      "sinalizados": 0,
+      "mae": 0.027179411764708422
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2026-02",
+      "avaliados": 22,
+      "sinalizados": 4,
+      "mae": 0.0699249999999998
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2026-03",
+      "avaliados": 43,
+      "sinalizados": 7,
+      "mae": 0.10998023255813921
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2026-04",
+      "avaliados": 39,
+      "sinalizados": 34,
+      "mae": 0.5513025641025672
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2026-05",
+      "avaliados": 40,
+      "sinalizados": 10,
+      "mae": 0.6763050000000036
+    },
+    {
+      "produto": "ETANOL",
+      "mes": "2026-06",
+      "avaliados": 47,
+      "sinalizados": 8,
+      "mae": 0.4088287234042571
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2025-09",
+      "avaliados": 68,
+      "sinalizados": 9,
+      "mae": 0.007236029411770373
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2025-10",
+      "avaliados": 67,
+      "sinalizados": 17,
+      "mae": 0.01621044776119761
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2025-11",
+      "avaliados": 68,
+      "sinalizados": 11,
+      "mae": 0.032340441176468074
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2025-12",
+      "avaliados": 40,
+      "sinalizados": 0,
+      "mae": 0.03163124999999996
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2026-01",
+      "avaliados": 31,
+      "sinalizados": 3,
+      "mae": 0.010770967741935623
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2026-02",
+      "avaliados": 33,
+      "sinalizados": 3,
+      "mae": 0.008154545454544778
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2026-03",
+      "avaliados": 71,
+      "sinalizados": 58,
+      "mae": 0.3696169014084335
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2026-04",
+      "avaliados": 63,
+      "sinalizados": 44,
+      "mae": 0.5609523809523477
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2026-05",
+      "avaliados": 64,
+      "sinalizados": 35,
+      "mae": 0.6799999999999657
+    },
+    {
+      "produto": "GASOLINA",
+      "mes": "2026-06",
+      "avaliados": 79,
+      "sinalizados": 1,
+      "mae": 0.48204113924050457
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2025-09",
+      "avaliados": 56,
+      "sinalizados": 4,
+      "mae": 0.026170535714280598
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2025-10",
+      "avaliados": 55,
+      "sinalizados": 11,
+      "mae": 0.052685454545454764
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2025-11",
+      "avaliados": 56,
+      "sinalizados": 6,
+      "mae": 0.06121607142857301
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2025-12",
+      "avaliados": 35,
+      "sinalizados": 5,
+      "mae": 0.06338142857142794
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2026-01",
+      "avaliados": 27,
+      "sinalizados": 1,
+      "mae": 0.030857407407402598
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2026-02",
+      "avaliados": 22,
+      "sinalizados": 7,
+      "mae": 0.059895454545454314
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2026-03",
+      "avaliados": 55,
+      "sinalizados": 44,
+      "mae": 0.29349030303030677
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2026-04",
+      "avaliados": 52,
+      "sinalizados": 39,
+      "mae": 0.3598076923076991
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2026-05",
+      "avaliados": 55,
+      "sinalizados": 20,
+      "mae": 0.49798909090909776
+    },
+    {
+      "produto": "GASOLINA ADITIVADA",
+      "mes": "2026-06",
+      "avaliados": 70,
+      "sinalizados": 4,
+      "mae": 0.18878714285714707
+    },
+    {
+      "produto": "GNV",
+      "mes": "2025-06",
+      "avaliados": 6,
+      "sinalizados": 0,
+      "mae": 0.03923333333333071
+    },
+    {
+      "produto": "GNV",
+      "mes": "2025-07",
+      "avaliados": 12,
+      "sinalizados": 2,
+      "mae": 0.06427500000000148
+    },
+    {
+      "produto": "GNV",
+      "mes": "2025-08",
+      "avaliados": 9,
+      "sinalizados": 9,
+      "mae": 0.1722555555555459
+    },
+    {
+      "produto": "GNV",
+      "mes": "2025-09",
+      "avaliados": 15,
+      "sinalizados": 0,
+      "mae": 0.11836999999998324
+    },
+    {
+      "produto": "GNV",
+      "mes": "2025-10",
+      "avaliados": 11,
+      "sinalizados": 0,
+      "mae": 0.12015454545452889
+    },
+    {
+      "produto": "GNV",
+      "mes": "2025-11",
+      "avaliados": 12,
+      "sinalizados": 12,
+      "mae": 0.000550000000022699
+    },
+    {
+      "produto": "GNV",
+      "mes": "2025-12",
+      "avaliados": 9,
+      "sinalizados": 9,
+      "mae": 0.000550000000022699
+    },
+    {
+      "produto": "GNV",
+      "mes": "2026-01",
+      "avaliados": 4,
+      "sinalizados": 2,
+      "mae": 0.0002750000000228958
+    },
+    {
+      "produto": "GNV",
+      "mes": "2026-02",
+      "avaliados": 6,
+      "sinalizados": 6,
+      "mae": 0.08000000000002316
+    },
+    {
+      "produto": "GNV",
+      "mes": "2026-03",
+      "avaliados": 8,
+      "sinalizados": 8,
+      "mae": 0.08000000000002316
+    },
+    {
+      "produto": "GNV",
+      "mes": "2026-04",
+      "avaliados": 12,
+      "sinalizados": 12,
+      "mae": 0.08000000000002316
+    },
+    {
+      "produto": "GNV",
+      "mes": "2026-05",
+      "avaliados": 16,
+      "sinalizados": 1,
+      "mae": 0.0475281249999831
+    },
+    {
+      "produto": "GNV",
+      "mes": "2026-06",
+      "avaliados": 19,
+      "sinalizados": 0,
+      "mae": 0.034813157894722925
+    }
+  ],
+  "limite_distancia_kmeans": {
+    "DIESEL S10": 1.976242153240852,
+    "ETANOL": 2.828116029406991,
+    "GASOLINA": 2.7193389289836736,
+    "GASOLINA ADITIVADA": 3.019777556036786,
+    "GNV": 3.0410512980019764
+  },
+  "testes_contaminacao": {
+    "DIESEL S10": {
+      "0.01": 4,
+      "0.03": 12,
+      "0.05": 20,
+      "0.1": 40
+    },
+    "ETANOL": {
+      "0.01": 11,
+      "0.03": 30,
+      "0.05": 55,
+      "0.1": 109
+    },
+    "GASOLINA": {
+      "0.01": 16,
+      "0.03": 47,
+      "0.05": 80,
+      "0.1": 159
+    },
+    "GASOLINA ADITIVADA": {
+      "0.01": 13,
+      "0.03": 36,
+      "0.05": 64,
+      "0.1": 127
+    },
+    "GNV": {
+      "0.01": 3,
+      "0.03": 9,
+      "0.05": 13,
+      "0.1": 27
+    }
+  }
+}

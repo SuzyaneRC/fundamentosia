@@ -92,24 +92,11 @@ def exibir_resultados(df_resultado, resultados_contaminacao):
 
 
 def main():
-    df = carregar_dados()
-    features = validar_colunas(df, FEATURES_ANOMALIA)
-    df_modelo, mascara_apta = selecionar_registros_aptos(df, features)
-
-    imprimir_resumo_base(df, df_modelo, mascara_apta, features)
-
-    x_scaled, _ = padronizar_features(df_modelo, features)
-    _, anomalias, scores = executar_isolation_forest(x_scaled)
-    resultados_contaminacao = testar_contaminacoes(x_scaled)
-
-    df_resultado = aplicar_resultados(
-        df,
-        df_modelo.index,
-        anomalias,
-        scores,
-    )
-
-    exibir_resultados(df_resultado, resultados_contaminacao)
+    from modelos_produto import aplicar_por_produto
+    df_resultado, limites, contaminacoes = aplicar_por_produto(carregar_dados())
+    print("Modelos e padroniza??o separados por combust?vel.")
+    print("Limites K-Means:", limites)
+    print("Testes de contamina??o por produto:", contaminacoes)
     quantidade_anomalias = int(df_resultado["anomalia_isolation_forest"].sum())
     caminho_txt = salvar_numero_txt(
         quantidade_anomalias,
