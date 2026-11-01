@@ -84,7 +84,7 @@ def exibir_resultados(df_resultado, limite_anomalia, metricas):
     print("\nMetricas no conjunto de teste:")
     print(f"MAE: {metricas['mae']:.4f}")
     print(f"RMSE: {metricas['rmse']:.4f}")
-    print("R?:", metricas["r2"])
+    print("R²:", metricas["r2"])
 
     colunas_amostra = [
         "Revenda",

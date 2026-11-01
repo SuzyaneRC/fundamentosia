@@ -90,9 +90,9 @@ def exibir_resultados(df_resultado, limite_anomalia):
 def main():
     from modelos_produto import aplicar_por_produto
     df_resultado, limites, contaminacoes = aplicar_por_produto(carregar_dados())
-    print("Modelos e padroniza??o separados por combust?vel.")
+    print("Modelos e padronização separados por combustível.")
     print("Limites K-Means:", limites)
-    print("Testes de contamina??o por produto:", contaminacoes)
+    print("Testes de contaminação por produto:", contaminacoes)
     quantidade_anomalias = int(df_resultado["anomalia_kmeans"].sum())
     caminho_txt = salvar_numero_txt(quantidade_anomalias, "anomalias_kmeans.txt")
     caminho = salvar_resultados(df_resultado, "resultado_kmeans.csv")
