@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 
 
-def aplicar_baseline(df):
+def aplicar_baseline(df, limite_desvios=2, limite_mad=3.5):
     df = df.copy()
     datas = pd.to_datetime(df['Data da Coleta'], dayfirst=True, errors='coerce')
     df['tempo'] = (datas - datas.min()).dt.days
@@ -27,11 +27,11 @@ def aplicar_baseline(df):
         score_mad = (residuo - centro).abs() / (1.4826 * mad) if mad > 1e-12 else np.where((residuo - centro).abs() > 1e-12, np.inf, 0)
         indices = grupo.index
         df.loc[indices, 'utilizado_regressao'] = True
-        for coluna, valores in [('preco_estimado', estimado), ('residuo_regressao', residuo), ('pontuacao_anomalia', score), ('score_mad', score_mad), ('limite_desvio_produto', 2 * desvio), ('mad_produto', mad)]:
+        for coluna, valores in [('preco_estimado', estimado), ('residuo_regressao', residuo), ('pontuacao_anomalia', score), ('score_mad', score_mad), ('limite_desvio_produto', limite_desvios * desvio), ('mad_produto', mad)]:
             df.loc[indices, coluna] = valores
-        df.loc[indices, 'anomalia_desvio_padrao'] = np.asarray(score) > 2
-        df.loc[indices, 'anomalia_mad'] = np.asarray(score_mad) > 3.5
-        df.loc[indices, 'anomalia_regressao'] = (np.asarray(score) > 2) | (np.asarray(score_mad) > 3.5)
+        df.loc[indices, 'anomalia_desvio_padrao'] = np.asarray(score) > limite_desvios
+        df.loc[indices, 'anomalia_mad'] = np.asarray(score_mad) > limite_mad
+        df.loc[indices, 'anomalia_regressao'] = (np.asarray(score) > limite_desvios) | (np.asarray(score_mad) > limite_mad)
     return df
 
 

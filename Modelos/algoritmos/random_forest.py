@@ -22,10 +22,11 @@ FEATURES_NUMERICAS = [
 FEATURES_CATEGORICAS = ["Produto", "Bairro", "Bandeira"]
 COLUNAS_MODELO = FEATURES_NUMERICAS + FEATURES_CATEGORICAS + [TARGET]
 PERCENTIL_ANOMALIA = 0.95
+N_ESTIMATORS = 200
 RANDOM_STATE = 42
 
 
-def criar_pipeline():
+def criar_pipeline(n_estimators=N_ESTIMATORS):
     pre_processador = ColumnTransformer(
         transformers=[
             ("categoricas", OneHotEncoder(handle_unknown="ignore"), FEATURES_CATEGORICAS),
@@ -39,7 +40,7 @@ def criar_pipeline():
             (
                 "modelo",
                 RandomForestRegressor(
-                    n_estimators=200,
+                    n_estimators=n_estimators,
                     random_state=RANDOM_STATE,
                     n_jobs=-1,
                 ),
@@ -48,11 +49,11 @@ def criar_pipeline():
     )
 
 
-def executar_random_forest(df_modelo):
+def executar_random_forest(df_modelo, n_estimators=N_ESTIMATORS, percentil=PERCENTIL_ANOMALIA):
     from avaliacao_temporal import avaliar_janelas
     return avaliar_janelas(
         df_modelo, FEATURES_NUMERICAS + FEATURES_CATEGORICAS,
-        TARGET, criar_pipeline, PERCENTIL_ANOMALIA,
+        TARGET, lambda: criar_pipeline(n_estimators), percentil,
     )
 
 

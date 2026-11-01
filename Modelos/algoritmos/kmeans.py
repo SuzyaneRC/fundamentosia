@@ -18,9 +18,9 @@ PERCENTIL_ANOMALIA = 0.95
 RANDOM_STATE = 42
 
 
-def executar_kmeans(x_scaled):
+def executar_kmeans(x_scaled, n_clusters=N_CLUSTERS, percentil=PERCENTIL_ANOMALIA):
     modelo = KMeans(
-        n_clusters=N_CLUSTERS,
+        n_clusters=n_clusters,
         random_state=RANDOM_STATE,
         n_init=10,
     )
@@ -28,7 +28,7 @@ def executar_kmeans(x_scaled):
     distancias = modelo.transform(x_scaled)
     # Arredonda o ruído numérico para que o resultado se repita entre execuções.
     scores = np.round(distancias.min(axis=1), 8)
-    limite_anomalia = round(float(np.quantile(scores, PERCENTIL_ANOMALIA)), 8)
+    limite_anomalia = round(float(np.quantile(scores, percentil)), 8)
     anomalias = (scores >= limite_anomalia) & (scores > 1e-12)
     return modelo, clusters, scores, anomalias, limite_anomalia
 
