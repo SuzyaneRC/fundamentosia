@@ -4,6 +4,8 @@ import unicodedata
 
 import pandas as pd
 
+from validacao_coletas import encontrar_coletas_conflitantes
+
 # Define a pasta de entrada e garante uma ordem determinística para os arquivos.
 CAMINHO = Path("planilhas")
 ARQUIVOS = sorted(CAMINHO.glob("*.csv"))
@@ -137,7 +139,26 @@ duplicados = dadosAracaju.duplicated(keep="first")
 print("Registros duplicados removidos:", duplicados.sum())
 dadosAracaju = dadosAracaju.loc[~duplicados].copy()
 
+# Registra preços diferentes para o mesmo posto, produto e data antes de descartar as repetições.
+# O arquivo é sempre regravado, para não restar resultado de uma execução anterior.
+conflitos = encontrar_coletas_conflitantes(dadosAracaju, CHAVE_REGISTRO)
+print(
+    "Coletas do mesmo posto, produto e data com preços diferentes:",
+    len(conflitos.drop_duplicates(CHAVE_REGISTRO)),
+)
+Path("relatorios").mkdir(exist_ok=True)
+conflitos.to_csv(
+    "relatorios/coletas_conflitantes.csv",
+    index=False,
+    encoding="utf-8-sig",
+    sep=";",
+    decimal=",",
+    float_format="%.2f",
+    date_format="%d/%m/%Y",
+)
+
 # Remove repetições da mesma combinação de posto, produto e data de coleta.
+# keep="first" mantém a primeira ocorrência; divergências ficam no relatório acima.
 repetidos_posto_produto_data = dadosAracaju.duplicated(
     subset=CHAVE_REGISTRO,
     keep="first",

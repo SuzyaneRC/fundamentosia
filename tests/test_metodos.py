@@ -8,6 +8,7 @@ from comparar_metodos import comparar, METODOS
 from avaliacao_temporal import criar_janelas, avaliar_janelas
 from modelos_produto import aplicar_por_produto
 from analise_sensibilidade import calcular_estabilidade, comparar_com_referencia, contar, rodar_kmeans
+from validacao_coletas import encontrar_coletas_conflitantes
 from unittest.mock import patch
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -98,6 +99,13 @@ class MetodosTests(unittest.TestCase):
             np.testing.assert_array_equal(rodada[3], rodadas[0][3])
             np.testing.assert_array_equal(rodada[4], rodadas[0][4])
         self.assertTrue(rodadas[0][3].all())
+
+    def test_coletas_conflitantes_exigem_precos_diferentes(self):
+        df = pd.DataFrame({'CNPJ': ['1', '1', '2', '2', '3'], 'Produto': 'A',
+                           'Valor de Venda': [5.0, 6.0, 5.0, 5.0, 5.0]})
+        conflitos = encontrar_coletas_conflitantes(df, ['CNPJ', 'Produto'])
+        self.assertEqual(conflitos['CNPJ'].tolist(), ['1', '1'])
+        self.assertTrue(encontrar_coletas_conflitantes(df.iloc[2:], ['CNPJ', 'Produto']).empty)
 
     def test_padronizacao_independente_por_produto(self):
         df = pd.DataFrame({'Produto': ['A'] * 12 + ['B'] * 12 + ['C'] * 3,

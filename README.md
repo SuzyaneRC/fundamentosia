@@ -8,6 +8,8 @@ As fontes em `planilhas` cobrem o segundo semestre de 2024, os dois semestres de
 
 A obtenção dos CSVs da ANP é manual. A leitura usa UTF-8, separador `;` e conversão do decimal brasileiro. CNPJ é preservado como texto. Revenda e CNPJ são mantidos em colunas distintas para permitir identificação e agrupamento.
 
+Quando há repetição do mesmo posto, produto e data, a limpeza mantém a primeira ocorrência. Se os preços forem diferentes, as linhas ficam em `relatorios/coletas_conflitantes.csv` e a quantidade aparece em `relatorios/limpeza.txt`. As planilhas atuais não têm repetições.
+
 ## Preparação do ambiente
 
 Requisitos: Python 3.10+, pandas, numpy, scikit-learn; Node.js 20.19+ ou 22.12+ para o painel.
