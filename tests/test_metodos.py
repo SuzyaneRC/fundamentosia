@@ -7,6 +7,7 @@ from baseline_regressao import aplicar_baseline
 from comparar_metodos import comparar, METODOS
 from avaliacao_temporal import criar_janelas, avaliar_janelas
 from modelos_produto import aplicar_por_produto
+from analise_sensibilidade import calcular_estabilidade, comparar_com_referencia, contar, rodar_kmeans
 from unittest.mock import patch
 
 RAIZ = Path(__file__).resolve().parents[1]
@@ -113,6 +114,53 @@ class MetodosTests(unittest.TestCase):
         for x in entradas:
             np.testing.assert_allclose(x.mean(axis=0), 0, atol=1e-12)
         self.assertFalse(resultado.loc[df['Produto'].eq('C'), 'utilizado_isolation_forest'].any())
+
+    def test_baseline_padrao_igual_aos_limites_de_referencia(self):
+        ruido = np.array([0, 0.1, -0.1, 0.05, 0, 0.1, 0, 0, 0, 2.0])
+        df = pd.DataFrame({'Produto': 'A', 'Data da Coleta': [f'{d:02d}/01/2026' for d in range(1, 11)],
+                           'Valor de Venda': 5 + ruido, 'poucos_registros': False})
+        pd.testing.assert_frame_equal(aplicar_baseline(df), aplicar_baseline(df, 2, 3.5))
+        self.assertLessEqual(aplicar_baseline(df, 3, 4)['anomalia_regressao'].sum(), aplicar_baseline(df)['anomalia_regressao'].sum())
+
+    def test_sensibilidade_compara_somente_interseção_avaliada(self):
+        usados = pd.Series([True, True, True, False])
+        flags = pd.Series([True, False, True, True])
+        usados_ref = pd.Series([True, True, False, True])
+        flags_ref = pd.Series([True, True, True, True])
+        resultado = comparar_com_referencia(usados, flags, usados_ref, flags_ref)
+        self.assertEqual(resultado['jaccard_referencia'], 0.5)
+        self.assertEqual(resultado['alertas_referencia_mantidos'], 0.5)
+        self.assertEqual(contar(usados, flags), {'avaliados': 3, 'sinalizados': 2, 'taxa': 2 / 3})
+
+    def test_sensibilidade_kmeans_exige_vetores_distintos_para_cada_k(self):
+        df = pd.DataFrame({'Produto': 'A', 'poucos_registros': False,
+                           'Valor de Venda': [1.0, 2.0, 3.0] * 4, 'variacao_percentual': [1.0, 2.0, 3.0] * 4,
+                           'diff_mediana_historica_posto': [1.0, 2.0, 3.0] * 4,
+                           'diff_mediana_municipal_percentual': [1.0, 2.0, 3.0] * 4})
+        self.assertTrue(rodar_kmeans(df, (3, 0.95))[0].all())
+        self.assertFalse(rodar_kmeans(df, (4, 0.95))[0].any())
+
+    def test_estabilidade_conta_apenas_configuracoes_que_avaliaram(self):
+        df = pd.DataFrame({'CNPJ da Revenda': ['1', '2', '3'], 'Produto': 'A', 'Data da Coleta': '01/01/2026',
+                           'Valor de Venda': 5.0, 'mediana_municipal': 5.0, 'diff_mediana_municipal_percentual': [1.0, 2.0, 3.0]})
+        execucoes = [{'metodo': m, 'usados': pd.Series([False] * 3), 'flags': pd.Series([False] * 3)} for m in METODOS if m != 'kmeans']
+        execucoes += [{'metodo': 'kmeans', 'usados': pd.Series([True, True, True]), 'flags': pd.Series([True, True, False])},
+                      {'metodo': 'kmeans', 'usados': pd.Series([False, True, True]), 'flags': pd.Series([False, False, False])}]
+        resultado = calcular_estabilidade(df, execucoes).set_index('CNPJ da Revenda')
+        self.assertEqual(resultado.loc['1', 'fracao_kmeans'], 1)
+        self.assertEqual(resultado.loc['2', 'fracao_kmeans'], 0.5)
+        self.assertEqual(resultado.loc['1', 'metodos_estaveis'], 1)
+        self.assertNotIn('3', resultado.index)
+
+    def test_referencia_da_sensibilidade_reproduz_a_comparacao_oficial(self):
+        sensibilidade = json.loads((RAIZ / 'relatorios/sensibilidade.json').read_text(encoding='utf-8'))
+        oficial = json.loads((RAIZ / 'relatorios/comparacao.json').read_text(encoding='utf-8'))['metodos']
+        referencias = [r for r in sensibilidade['geral'] if r['referencia']]
+        self.assertEqual(len(referencias), len(METODOS))
+        for r in referencias:
+            self.assertEqual(r['avaliados'], oficial[r['metodo']]['avaliados'])
+            self.assertEqual(r['sinalizados'], oficial[r['metodo']]['sinalizados'])
+            self.assertEqual(r['jaccard_referencia'], 1)
 
 
 if __name__ == '__main__':

@@ -23,6 +23,18 @@ A avaliação em janelas amplia a cobertura para 1.718 previsões de teste disti
 
 Isolation Forest e K-Means têm Jaccard de 45,94%, enquanto a concordância total é 96,24%. A concordância total é influenciada pela maioria de registros não sinalizados; os métodos ainda divergem sobre parte importante dos alertas.
 
+## Sensibilidade dos alertas aos parâmetros
+
+Interpretação de `relatorios/sensibilidade.md`, com 34 configurações.
+
+- Random Forest: a taxa elevada não decorre do número de árvores nem só do percentil. Com 100, 200 ou 400 árvores no percentil 95, ficou entre 27,53% e 28,58%; mesmo no percentil 99, ficou entre 19,32% e 19,67%, muito acima do 1% que uma distribuição estável sugeriria. Março a maio de 2026 concentram 326 dos 491 alertas (66,40%) em 554 dos 1.718 registros de teste; nos demais meses, a taxa é de 14,18%. O padrão é compatível com a mudança de nível de preços já descrita acima, mas não a demonstra como causa.
+- Baseline: é o método mais sensível ao limite. Passar de 2 para 2,5 desvios reduz os alertas de 201 para 35; 3 desvios e 3,5 MAD deixam 9. Com 2 desvios, o limite MAD não altera os alertas. A escolha de 2 desvios define, portanto, boa parte do resultado.
+- Isolation Forest e K-Means: a taxa acompanha o parâmetro por construção. Com K-Means no percentil 95, mudar K de 3 para 5 mantém 67,23% dos alertas da referência e chega a Jaccard de 50,97%: a contagem quase não muda, mas os registros mudam.
+- Proximidade do mercado: 55,60% dos alertas do Random Forest e 52,04% dos do baseline têm preço a até 1% da mediana dos outros postos no mesmo dia. Esses casos dizem menos sobre um posto específico. O limite de 1% é descritivo.
+- Alertas estáveis: 1.270 registros são sinalizados em alguma configuração, mas só 30 são estáveis em dois ou mais métodos, 11 em três ou mais e 1 nos quatro (32864795001063, gasolina aditivada, 20/03/2026, R$ 7,89, +10,50% sobre a mediana). Essa lista é um ponto de partida mais robusto para a conferência do que uma única configuração.
+
+A grade mede estabilidade, não acerto: sem rótulos confirmados, não indica quais parâmetros são melhores, e por isso a referência foi mantida.
+
 ## Uso das revisões no painel
 
 O grupo pode registrar situação e observações em cada coleta e exportá-las em CSV. A revisão fica no navegador e não altera as previsões. Os resultados associados à revisão são identificados; uma revisão fica desatualizada quando seus preços ou resultados mudam. Essa coleta inicial de avaliações humanas poderá apoiar uma validação futura, mas ainda não constitui uma base compartilhada de rótulos confirmados.

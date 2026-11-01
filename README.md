@@ -53,6 +53,7 @@ Os resumos são guardados em `relatorios/limpeza.txt`, `base.txt` e `temporal.tx
 | Métricas da base | `metricasBaseBruta.py` | Quantidade de registros e CNPJs, produtos e período |
 | Variáveis temporais | `processamento_temporal.py` | Preço anterior, variações, referências históricas e municipais e séries curtas |
 | Modelagem e comparação | `comparar_metodos.py` | Base consolidada com os quatro métodos e relatórios de comparação |
+| Sensibilidade | `analise_sensibilidade.py` | Efeito dos parâmetros sobre os alertas e estabilidade por registro, sem alterar a base consolidada |
 
 Ao executar novamente o pipeline, a base consolidada e os relatórios automáticos são sobrescritos. A revisão dos casos em `relatorios/revisao_casos.md` é preservada e precisa ser atualizada quando a base ou os parâmetros mudarem.
 
@@ -103,6 +104,21 @@ O Random Forest cobre **30 janelas e 1.718 registros de teste distintos**, com o
 
 Esses números correspondem à base e aos parâmetros atuais. Consulte os [resultados completos](relatorios/resultados.md), os [indicadores em JSON](relatorios/comparacao.json) e a [revisão dos casos](relatorios/revisao_casos.md) após novas execuções.
 
+## Análise de sensibilidade
+
+`analise_sensibilidade.py` repete os métodos em 34 configurações e compara os alertas com os parâmetros de referência, no total, por produto e por mês. A etapa leva alguns minutos e também é executada pelo pipeline; a base consolidada e o painel continuam usando somente a referência.
+
+| Método | Grade testada |
+|---|---|
+| Baseline | 2/2,5/3 desvios × 3/3,5/4 MAD |
+| Isolation Forest | contaminação 1%, 3%, 5% e 10% |
+| K-Means | K=2/3/4/5 × percentis 90/95/99 |
+| Random Forest | 100/200/400 árvores × percentis 90/95/99 |
+
+Os resultados estão em `relatorios/sensibilidade.md` e `sensibilidade.json`. `relatorios/estabilidade_alertas.csv` traz, para cada registro sinalizado em alguma configuração, a fração de configurações que o sinalizam em cada método; `metodos_estaveis` conta os métodos em que ele é sinalizado em todas. A interpretação está em `relatorios/revisao_casos.md`.
+
+Previsões, erros e limites do Random Forest e distâncias do K-Means são arredondados a 8 casas decimais: sem isso, o ruído numérico da execução paralela mudava alertas empatados com o limite entre execuções.
+
 ## Painel
 
 ```powershell
@@ -146,7 +162,7 @@ npm run lint
 node scripts/visual-check.mjs
 ```
 
-Os testes Python verificam limites por produto, exclusão de séries curtas, comparação apenas de registros avaliados, padronização por produto, separação temporal e ausência de previsões repetidas ou feitas sobre dados de treino.
+Os testes Python verificam limites por produto, exclusão de séries curtas, comparação apenas de registros avaliados, padronização por produto, separação temporal , ausência de previsões repetidas ou feitas sobre dados de treino, alertas imunes a ruído numérico e coincidência entre a referência da sensibilidade e a comparação oficial.
 
 O teste visual requer Chrome no caminho configurado em `frontend/scripts/visual-check.mjs` e o servidor local na porta 5173. Ele verifica desktop e celular, comparação na população comum, filtros de sinalização, exportação, persistência das revisões após recarga, paginação, detalhes e ausência de erros de interface. Também simula falha no CSV e verifica a recuperação pelo botão de nova tentativa.
 

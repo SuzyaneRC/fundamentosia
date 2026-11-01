@@ -106,7 +106,7 @@ def main():
                '- Pontuações têm escalas diferentes. Compare sinalizações e rankings, não os valores brutos entre métodos.',
                '- Concordância total pode ser alta pela predominância de registros não sinalizados; Jaccard compara apenas a união das sinalizações.',
                '- Não há rótulos de anomalias confirmadas: concordância e coerência não substituem precisão/recall nem validação humana.',
-               '- Próximos testes: K=2/3/4/5, percentis 90/95/99, RF 100/200/400 árvores e limites baseline 2/2,5/3 desvios e 3/3,5/4 MAD. Comparar por produto e em janelas temporais.']
+               '- Sensibilidade a K, percentis, árvores e limites do baseline: ver `relatorios/sensibilidade.md`.']
     linhas += ['', '## Diagnóstico por produto e mês — Random Forest', '',
                '| Produto | Mês | Avaliados | Sinalizados | Taxa | MAE |', '|---|---|---:|---:|---:|---:|']
     for r in por_mes:

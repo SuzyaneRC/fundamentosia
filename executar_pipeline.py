@@ -10,7 +10,8 @@ relatorios.mkdir(exist_ok=True)
 for script, relatorio in [('criaBaseBruta.py', 'limpeza.txt'),
                           ('metricasBaseBruta.py', 'base.txt'),
                           ('processamento_temporal.py', 'temporal.txt'),
-                          ('comparar_metodos.py', 'execucao_modelos.txt')]:
+                          ('comparar_metodos.py', 'execucao_modelos.txt'),
+                          ('analise_sensibilidade.py', 'execucao_sensibilidade.txt')]:
     resultado = subprocess.run([sys.executable, str(RAIZ / script)], cwd=RAIZ,
                                capture_output=True, text=True, encoding='utf-8',
                                env={**os.environ, 'PYTHONIOENCODING': 'utf-8'})
