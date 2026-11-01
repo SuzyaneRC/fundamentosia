@@ -26,8 +26,9 @@ def executar_kmeans(x_scaled):
     )
     clusters = modelo.fit_predict(x_scaled)
     distancias = modelo.transform(x_scaled)
-    scores = distancias.min(axis=1)
-    limite_anomalia = float(np.quantile(scores, PERCENTIL_ANOMALIA))
+    # Arredonda o ruído numérico para que o resultado se repita entre execuções.
+    scores = np.round(distancias.min(axis=1), 8)
+    limite_anomalia = round(float(np.quantile(scores, PERCENTIL_ANOMALIA)), 8)
     anomalias = (scores >= limite_anomalia) & (scores > 1e-12)
     return modelo, clusters, scores, anomalias, limite_anomalia
 

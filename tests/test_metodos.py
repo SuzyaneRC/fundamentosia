@@ -83,6 +83,21 @@ class MetodosTests(unittest.TestCase):
         self.assertTrue((limites == 1).all())
         self.assertEqual(len(flags), metricas['teste'])
 
+    def test_ruido_numerico_nao_altera_alertas_temporais(self):
+        ruido = np.random.default_rng(0)
+        class Modelo:
+            def fit(self, x, y):
+                pass
+            def predict(self, x):
+                return np.full(len(x), 1.25) + ruido.uniform(-1e-13, 1e-13, len(x))
+        df = pd.DataFrame({'Produto': 'A', 'Data da Coleta': pd.date_range('2025-01-01', periods=40).repeat(3),
+                           'tempo': np.repeat(np.arange(40), 3), 'preco': 1.0})
+        rodadas = [avaliar_janelas(df, ['tempo'], 'preco', Modelo) for _ in range(5)]
+        for rodada in rodadas:
+            np.testing.assert_array_equal(rodada[3], rodadas[0][3])
+            np.testing.assert_array_equal(rodada[4], rodadas[0][4])
+        self.assertTrue(rodadas[0][3].all())
+
     def test_padronizacao_independente_por_produto(self):
         df = pd.DataFrame({'Produto': ['A'] * 12 + ['B'] * 12 + ['C'] * 3,
                            'poucos_registros': False})

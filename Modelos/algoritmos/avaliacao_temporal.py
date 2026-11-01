@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
+CASAS_DECIMAIS = 8
+
 
 def criar_janelas(datas):
     dias = np.sort(pd.Series(datas).dropna().unique())
@@ -32,10 +34,11 @@ def avaliar_janelas(df, features, target, criar_modelo, percentil=0.95):
                 continue
             modelo = criar_modelo()
             modelo.fit(treino[features], treino[target])
-            erro_cal = np.abs(cal[target].to_numpy() - modelo.predict(cal[features]))
-            limite = float(np.quantile(erro_cal, percentil))
-            previsto = modelo.predict(teste[features])
-            erro = np.abs(teste[target].to_numpy() - previsto)
+            # A soma paralela das árvores varia em ruído numérico; sem arredondar, empates com o limite mudam entre execuções.
+            erro_cal = np.round(np.abs(cal[target].to_numpy() - np.round(modelo.predict(cal[features]), CASAS_DECIMAIS)), CASAS_DECIMAIS)
+            limite = round(float(np.quantile(erro_cal, percentil)), CASAS_DECIMAIS)
+            previsto = np.round(modelo.predict(teste[features]), CASAS_DECIMAIS)
+            erro = np.round(np.abs(teste[target].to_numpy() - previsto), CASAS_DECIMAIS)
             # Erro zero não é anomalia, mesmo quando a calibração é constante.
             anomalia = (erro >= limite) & (erro > 1e-12)
             indices.extend(teste.index.tolist())

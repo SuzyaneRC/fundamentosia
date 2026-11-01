@@ -78,9 +78,9 @@
     }
   ],
   "random_forest": {
-    "mae": 0.20438131063251672,
-    "rmse": 0.32584436408916856,
-    "r2": 0.8742932598539683,
+    "mae": 0.20438131064027934,
+    "rmse": 0.325844364100688,
+    "r2": 0.8742932598450802,
     "teste": 1718,
     "janelas": [
       {
@@ -94,9 +94,9 @@
         "fim_calibracao": "2025-06-16",
         "inicio_teste": "2025-06-24",
         "fim_teste": "2025-08-27",
-        "limite_erro": 0.3241914285714143,
-        "mae": 0.07475540540540414,
-        "rmse": 0.09470371614330399,
+        "limite_erro": 0.32419143,
+        "mae": 0.07475540540540541,
+        "rmse": 0.09470371614330322,
         "sinalizados": 0
       },
       {
@@ -110,9 +110,9 @@
         "fim_calibracao": "2025-08-27",
         "inicio_teste": "2025-09-02",
         "fim_teste": "2025-11-04",
-        "limite_erro": 0.013400000000012286,
-        "mae": 0.018817857142863634,
-        "rmse": 0.0345835058228622,
+        "limite_erro": 0.0134,
+        "mae": 0.01881785714285714,
+        "rmse": 0.034583505822863014,
         "sinalizados": 14
       },
       {
@@ -126,9 +126,9 @@
         "fim_calibracao": "2025-11-04",
         "inicio_teste": "2025-11-11",
         "fim_teste": "2025-12-29",
-        "limite_erro": 0.05087499999999423,
-        "mae": 0.03225568181818819,
-        "rmse": 0.06730063170884007,
+        "limite_erro": 0.050875,
+        "mae": 0.032255681818181815,
+        "rmse": 0.06730063170884126,
         "sinalizados": 2
       },
       {
@@ -142,9 +142,9 @@
         "fim_calibracao": "2025-12-29",
         "inicio_teste": "2026-01-05",
         "fim_teste": "2026-03-20",
-        "limite_erro": 0.03530000000000122,
-        "mae": 0.14110080645161527,
-        "rmse": 0.2854535632889453,
+        "limite_erro": 0.0353,
+        "mae": 0.1411008064516129,
+        "rmse": 0.28545356328894345,
         "sinalizados": 14
       },
       {
@@ -158,9 +158,9 @@
         "fim_calibracao": "2026-03-20",
         "inicio_teste": "2026-03-25",
         "fim_teste": "2026-05-26",
-        "limite_erro": 0.7492500000000075,
-        "mae": 0.624366666666677,
-        "rmse": 0.6399327681157969,
+        "limite_erro": 0.74925,
+        "mae": 0.6243666666666666,
+        "rmse": 0.6399327681157868,
         "sinalizados": 4
       },
       {
@@ -174,9 +174,9 @@
         "fim_calibracao": "2026-05-26",
         "inicio_teste": "2026-06-03",
         "fim_teste": "2026-06-30",
-        "limite_erro": 0.9009850000000151,
-        "mae": 0.34358571428573054,
-        "rmse": 0.38954489059122,
+        "limite_erro": 0.900985,
+        "mae": 0.34358571428571427,
+        "rmse": 0.3895448905912055,
         "sinalizados": 0
       },
       {
@@ -190,9 +190,9 @@
         "fim_calibracao": "2025-08-27",
         "inicio_teste": "2025-09-02",
         "fim_teste": "2025-11-04",
-        "limite_erro": 0.0491500000000018,
-        "mae": 0.017194565217392647,
-        "rmse": 0.028166636330490557,
+        "limite_erro": 0.04915,
+        "mae": 0.0171945652173913,
+        "rmse": 0.02816663633048705,
         "sinalizados": 6
       },
       {
@@ -206,9 +206,9 @@
         "fim_calibracao": "2025-11-04",
         "inicio_teste": "2025-11-05",
         "fim_teste": "2025-12-29",
-        "limite_erro": 0.0821174999999982,
-        "mae": 0.023039795918365056,
-        "rmse": 0.05133937552787233,
+        "limite_erro": 0.0821175,
+        "mae": 0.023039795918367346,
+        "rmse": 0.051339375527871746,
         "sinalizados": 5
       },
       {
@@ -222,9 +222,9 @@
         "fim_calibracao": "2025-12-29",
         "inicio_teste": "2026-01-06",
         "fim_teste": "2026-03-09",
-        "limite_erro": 0.15257000000000273,
-        "mae": 0.05370701754385962,
-        "rmse": 0.07740407872656768,
+        "limite_erro": 0.15257,
+        "mae": 0.053707017543859654,
+        "rmse": 0.07740407872656822,
         "sinalizados": 4
       },
       {
@@ -238,9 +238,9 @@
         "fim_calibracao": "2026-03-09",
         "inicio_teste": "2026-03-20",
         "fim_teste": "2026-04-29",
-        "limite_erro": 0.17030800000000884,
-        "mae": 0.3932664062500023,
-        "rmse": 0.4744366957986223,
+        "limite_erro": 0.170308,
+        "mae": 0.39326640625,
+        "rmse": 0.47443669579862024,
         "sinalizados": 41
       },
       {
@@ -254,9 +254,9 @@
         "fim_calibracao": "2026-04-29",
         "inicio_teste": "2026-05-04",
         "fim_teste": "2026-06-16",
-        "limite_erro": 0.7610500000000027,
-        "mae": 0.65339130434783,
-        "rmse": 0.6578272531599804,
+        "limite_erro": 0.76105,
+        "mae": 0.6533913043478261,
+        "rmse": 0.6578272531599767,
         "sinalizados": 17
       },
       {
@@ -270,9 +270,9 @@
         "fim_calibracao": "2026-06-16",
         "inicio_teste": "2026-06-23",
         "fim_teste": "2026-06-30",
-        "limite_erro": 0.09119000000000471,
-        "mae": 0.0657305555555537,
-        "rmse": 0.07138266693595093,
+        "limite_erro": 0.09119,
+        "mae": 0.06573055555555556,
+        "rmse": 0.07138266693595083,
         "sinalizados": 1
       },
       {
@@ -286,9 +286,9 @@
         "fim_calibracao": "2025-09-02",
         "inicio_teste": "2025-09-09",
         "fim_teste": "2025-11-05",
-        "limite_erro": 0.01679999999999282,
-        "mae": 0.013935526315793213,
-        "rmse": 0.023630223594055633,
+        "limite_erro": 0.0168,
+        "mae": 0.013935526315789473,
+        "rmse": 0.02363022359405986,
         "sinalizados": 37
       },
       {
@@ -302,9 +302,9 @@
         "fim_calibracao": "2025-11-05",
         "inicio_teste": "2025-11-11",
         "fim_teste": "2025-12-30",
-        "limite_erro": 0.06586749999999206,
-        "mae": 0.03213571428571301,
-        "rmse": 0.03898611580132803,
+        "limite_erro": 0.0658675,
+        "mae": 0.032135714285714274,
+        "rmse": 0.038986115801330164,
         "sinalizados": 0
       },
       {
@@ -318,9 +318,9 @@
         "fim_calibracao": "2025-12-30",
         "inicio_teste": "2026-01-05",
         "fim_teste": "2026-02-24",
-        "limite_erro": 0.03175000000000949,
-        "mae": 0.009421874999999719,
-        "rmse": 0.014255664992382731,
+        "limite_erro": 0.03175,
+        "mae": 0.009421875,
+        "rmse": 0.014255664992381097,
         "sinalizados": 6
       },
       {
@@ -334,9 +334,9 @@
         "fim_calibracao": "2026-02-24",
         "inicio_teste": "2026-03-04",
         "fim_teste": "2026-04-23",
-        "limite_erro": 0.011632500000019695,
-        "mae": 0.43089230769228565,
-        "rmse": 0.4937912195062929,
+        "limite_erro": 0.0116325,
+        "mae": 0.43089230769230763,
+        "rmse": 0.4937912195063197,
         "sinalizados": 91
       },
       {
@@ -350,9 +350,9 @@
         "fim_calibracao": "2026-04-23",
         "inicio_teste": "2026-04-24",
         "fim_teste": "2026-06-03",
-        "limite_erro": 0.5999999999999659,
-        "mae": 0.6138738738738397,
-        "rmse": 0.6359486069098577,
+        "limite_erro": 0.6,
+        "mae": 0.613873873873874,
+        "rmse": 0.6359486069098906,
         "sinalizados": 46
       },
       {
@@ -366,9 +366,9 @@
         "fim_calibracao": "2026-06-03",
         "inicio_teste": "2026-06-08",
         "fim_teste": "2026-06-30",
-        "limite_erro": 0.6292249999999942,
-        "mae": 0.4876008064516199,
-        "rmse": 0.4968493214099117,
+        "limite_erro": 0.629225,
+        "mae": 0.48760080645161286,
+        "rmse": 0.49684932140990584,
         "sinalizados": 1
       },
       {
@@ -382,9 +382,9 @@
         "fim_calibracao": "2025-09-02",
         "inicio_teste": "2025-09-09",
         "fim_teste": "2025-11-05",
-        "limite_erro": 0.11230999999999534,
-        "mae": 0.04482599999999798,
-        "rmse": 0.06750653760932963,
+        "limite_erro": 0.11231,
+        "mae": 0.044826,
+        "rmse": 0.06750653760933084,
         "sinalizados": 20
       },
       {
@@ -398,9 +398,9 @@
         "fim_calibracao": "2025-11-05",
         "inicio_teste": "2025-11-11",
         "fim_teste": "2025-12-30",
-        "limite_erro": 0.11563999999998487,
-        "mae": 0.05722662337662396,
-        "rmse": 0.06978590520251873,
+        "limite_erro": 0.11564,
+        "mae": 0.05722662337662337,
+        "rmse": 0.06978590520251969,
         "sinalizados": 6
       },
       {
@@ -414,9 +414,9 @@
         "fim_calibracao": "2025-12-30",
         "inicio_teste": "2026-01-05",
         "fim_teste": "2026-03-04",
-        "limite_erro": 0.06054000000000511,
-        "mae": 0.047467796610167236,
-        "rmse": 0.07643722138826889,
+        "limite_erro": 0.06054,
+        "mae": 0.047467796610169484,
+        "rmse": 0.07643722138826949,
         "sinalizados": 10
       },
       {
@@ -430,9 +430,9 @@
         "fim_calibracao": "2026-03-04",
         "inicio_teste": "2026-03-09",
         "fim_teste": "2026-04-24",
-        "limite_erro": 0.13629499999998604,
-        "mae": 0.3545224899598448,
-        "rmse": 0.38663975704382963,
+        "limite_erro": 0.136295,
+        "mae": 0.35452249012048187,
+        "rmse": 0.3866397572446902,
         "sinalizados": 80
       },
       {
@@ -446,9 +446,9 @@
         "fim_calibracao": "2026-04-24",
         "inicio_teste": "2026-04-27",
         "fim_teste": "2026-06-08",
-        "limite_erro": 0.5756500000000067,
-        "mae": 0.42399887640450135,
-        "rmse": 0.48055678890174514,
+        "limite_erro": 0.57565,
+        "mae": 0.4239988764044944,
+        "rmse": 0.480556788901739,
         "sinalizados": 23
       },
       {
@@ -462,9 +462,9 @@
         "fim_calibracao": "2026-06-08",
         "inicio_teste": "2026-06-09",
         "fim_teste": "2026-06-30",
-        "limite_erro": 0.3189999999999995,
-        "mae": 0.15290900000000301,
-        "rmse": 0.1727606733316397,
+        "limite_erro": 0.319,
+        "mae": 0.15290900000000002,
+        "rmse": 0.17276067333163528,
         "sinalizados": 2
       },
       {
@@ -478,9 +478,9 @@
         "fim_calibracao": "2025-06-16",
         "inicio_teste": "2025-06-24",
         "fim_teste": "2025-08-19",
-        "limite_erro": 0.10505000000000764,
-        "mae": 0.09470370370370056,
-        "rmse": 0.11884392192189394,
+        "limite_erro": 0.10505,
+        "mae": 0.09470370370370372,
+        "rmse": 0.11884392192189629,
         "sinalizados": 11
       },
       {
@@ -494,9 +494,9 @@
         "fim_calibracao": "2025-08-19",
         "inicio_teste": "2025-09-02",
         "fim_teste": "2025-10-28",
-        "limite_erro": 0.2931600000000058,
-        "mae": 0.11912499999998333,
-        "rmse": 0.1191394468195046,
+        "limite_erro": 0.29316,
+        "mae": 0.119125,
+        "rmse": 0.11913944681952127,
         "sinalizados": 0
       },
       {
@@ -510,9 +510,9 @@
         "fim_calibracao": "2025-10-28",
         "inicio_teste": "2025-11-04",
         "fim_teste": "2026-01-05",
-        "limite_erro": 0.000550000000022699,
-        "mae": 0.000550000000022699,
-        "rmse": 0.000550000000022699,
+        "limite_erro": 0.00055,
+        "mae": 0.00055,
+        "rmse": 0.00055,
         "sinalizados": 23
       },
       {
@@ -526,9 +526,9 @@
         "fim_calibracao": "2026-01-05",
         "inicio_teste": "2026-01-20",
         "fim_teste": "2026-04-24",
-        "limite_erro": 2.3092638912203256e-14,
-        "mae": 0.0733333333333565,
-        "rmse": 0.07659416862052922,
+        "limite_erro": 0.0,
+        "mae": 0.07333333333333333,
+        "rmse": 0.07659416862050705,
         "sinalizados": 22
       },
       {
@@ -542,9 +542,9 @@
         "fim_calibracao": "2026-04-24",
         "inicio_teste": "2026-04-29",
         "fim_teste": "2026-06-09",
-        "limite_erro": 0.08000000000002316,
-        "mae": 0.049401785714274525,
-        "rmse": 0.06498732912212839,
+        "limite_erro": 0.08,
+        "mae": 0.04940178571428572,
+        "rmse": 0.06498732912213405,
         "sinalizados": 5
       },
       {
@@ -558,9 +558,9 @@
         "fim_calibracao": "2026-06-09",
         "inicio_teste": "2026-06-16",
         "fim_teste": "2026-06-30",
-        "limite_erro": 0.05324999999998849,
-        "mae": 0.032604545454533736,
-        "rmse": 0.03331714341677171,
+        "limite_erro": 0.05325,
+        "mae": 0.03260454545454545,
+        "rmse": 0.03331714341678388,
         "sinalizados": 0
       }
     ],
@@ -682,400 +682,400 @@
       "mes": "2025-06",
       "avaliados": 8,
       "sinalizados": 0,
-      "mae": 0.07609999999999761
+      "mae": 0.0761
     },
     {
       "produto": "DIESEL S10",
       "mes": "2025-07",
       "avaliados": 16,
       "sinalizados": 0,
-      "mae": 0.07505937499999749
+      "mae": 0.075059375
     },
     {
       "produto": "DIESEL S10",
       "mes": "2025-08",
       "avaliados": 13,
       "sinalizados": 0,
-      "mae": 0.07355384615384711
+      "mae": 0.07355384615384616
     },
     {
       "produto": "DIESEL S10",
       "mes": "2025-09",
       "avaliados": 18,
       "sinalizados": 7,
-      "mae": 0.022437500000001345
+      "mae": 0.0224375
     },
     {
       "produto": "DIESEL S10",
       "mes": "2025-10",
       "avaliados": 14,
       "sinalizados": 6,
-      "mae": 0.016535714285725738
+      "mae": 0.01653571428571429
     },
     {
       "produto": "DIESEL S10",
       "mes": "2025-11",
       "avaliados": 11,
       "sinalizados": 1,
-      "mae": 0.01090454545455678
+      "mae": 0.010904545454545455
     },
     {
       "produto": "DIESEL S10",
       "mes": "2025-12",
       "avaliados": 14,
       "sinalizados": 2,
-      "mae": 0.04378035714286131
+      "mae": 0.04378035714285715
     },
     {
       "produto": "DIESEL S10",
       "mes": "2026-01",
       "avaliados": 12,
       "sinalizados": 1,
-      "mae": 0.011304166666669113
+      "mae": 0.011304166666666665
     },
     {
       "produto": "DIESEL S10",
       "mes": "2026-02",
       "avaliados": 7,
       "sinalizados": 3,
-      "mae": 0.018950000000000626
+      "mae": 0.018949999999999998
     },
     {
       "produto": "DIESEL S10",
       "mes": "2026-03",
       "avaliados": 16,
       "sinalizados": 10,
-      "mae": 0.4107453125000042
+      "mae": 0.4107453125
     },
     {
       "produto": "DIESEL S10",
       "mes": "2026-04",
       "avaliados": 10,
       "sinalizados": 3,
-      "mae": 0.7384450000000113
+      "mae": 0.738445
     },
     {
       "produto": "DIESEL S10",
       "mes": "2026-05",
       "avaliados": 10,
       "sinalizados": 1,
-      "mae": 0.5134250000000107
+      "mae": 0.513425
     },
     {
       "produto": "DIESEL S10",
       "mes": "2026-06",
       "avaliados": 14,
       "sinalizados": 0,
-      "mae": 0.34358571428573054
+      "mae": 0.34358571428571427
     },
     {
       "produto": "ETANOL",
       "mes": "2025-09",
       "avaliados": 49,
       "sinalizados": 0,
-      "mae": 0.012321428571430143
+      "mae": 0.01232142857142857
     },
     {
       "produto": "ETANOL",
       "mes": "2025-10",
       "avaliados": 38,
       "sinalizados": 5,
-      "mae": 0.022814473684212213
+      "mae": 0.022814473684210534
     },
     {
       "produto": "ETANOL",
       "mes": "2025-11",
       "avaliados": 35,
       "sinalizados": 6,
-      "mae": 0.029179999999997337
+      "mae": 0.029179999999999998
     },
     {
       "produto": "ETANOL",
       "mes": "2025-12",
       "avaliados": 19,
       "sinalizados": 0,
-      "mae": 0.01151842105262965
+      "mae": 0.011518421052631579
     },
     {
       "produto": "ETANOL",
       "mes": "2026-01",
       "avaliados": 17,
       "sinalizados": 0,
-      "mae": 0.027179411764708422
+      "mae": 0.02717941176470588
     },
     {
       "produto": "ETANOL",
       "mes": "2026-02",
       "avaliados": 22,
       "sinalizados": 4,
-      "mae": 0.0699249999999998
+      "mae": 0.06992500000000001
     },
     {
       "produto": "ETANOL",
       "mes": "2026-03",
       "avaliados": 43,
       "sinalizados": 7,
-      "mae": 0.10998023255813921
+      "mae": 0.10998023255813955
     },
     {
       "produto": "ETANOL",
       "mes": "2026-04",
       "avaliados": 39,
       "sinalizados": 34,
-      "mae": 0.5513025641025672
+      "mae": 0.551302564102564
     },
     {
       "produto": "ETANOL",
       "mes": "2026-05",
       "avaliados": 40,
       "sinalizados": 10,
-      "mae": 0.6763050000000036
+      "mae": 0.6763049999999999
     },
     {
       "produto": "ETANOL",
       "mes": "2026-06",
       "avaliados": 47,
       "sinalizados": 8,
-      "mae": 0.4088287234042571
+      "mae": 0.40882872340425536
     },
     {
       "produto": "GASOLINA",
       "mes": "2025-09",
       "avaliados": 68,
       "sinalizados": 9,
-      "mae": 0.007236029411770373
+      "mae": 0.007236029411764705
     },
     {
       "produto": "GASOLINA",
       "mes": "2025-10",
       "avaliados": 67,
       "sinalizados": 17,
-      "mae": 0.01621044776119761
+      "mae": 0.016210447761194027
     },
     {
       "produto": "GASOLINA",
       "mes": "2025-11",
       "avaliados": 68,
       "sinalizados": 11,
-      "mae": 0.032340441176468074
+      "mae": 0.032340441176470586
     },
     {
       "produto": "GASOLINA",
       "mes": "2025-12",
       "avaliados": 40,
       "sinalizados": 0,
-      "mae": 0.03163124999999996
+      "mae": 0.03163125
     },
     {
       "produto": "GASOLINA",
       "mes": "2026-01",
       "avaliados": 31,
       "sinalizados": 3,
-      "mae": 0.010770967741935623
+      "mae": 0.010770967741935485
     },
     {
       "produto": "GASOLINA",
       "mes": "2026-02",
       "avaliados": 33,
       "sinalizados": 3,
-      "mae": 0.008154545454544778
+      "mae": 0.008154545454545454
     },
     {
       "produto": "GASOLINA",
       "mes": "2026-03",
       "avaliados": 71,
       "sinalizados": 58,
-      "mae": 0.3696169014084335
+      "mae": 0.3696169014084507
     },
     {
       "produto": "GASOLINA",
       "mes": "2026-04",
       "avaliados": 63,
       "sinalizados": 44,
-      "mae": 0.5609523809523477
+      "mae": 0.560952380952381
     },
     {
       "produto": "GASOLINA",
       "mes": "2026-05",
       "avaliados": 64,
       "sinalizados": 35,
-      "mae": 0.6799999999999657
+      "mae": 0.68
     },
     {
       "produto": "GASOLINA",
       "mes": "2026-06",
       "avaliados": 79,
       "sinalizados": 1,
-      "mae": 0.48204113924050457
+      "mae": 0.4820411392405064
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2025-09",
       "avaliados": 56,
       "sinalizados": 4,
-      "mae": 0.026170535714280598
+      "mae": 0.026170535714285712
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2025-10",
       "avaliados": 55,
       "sinalizados": 11,
-      "mae": 0.052685454545454764
+      "mae": 0.052685454545454535
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2025-11",
       "avaliados": 56,
       "sinalizados": 6,
-      "mae": 0.06121607142857301
+      "mae": 0.061216071428571425
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2025-12",
       "avaliados": 35,
       "sinalizados": 5,
-      "mae": 0.06338142857142794
+      "mae": 0.06338142857142856
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2026-01",
       "avaliados": 27,
       "sinalizados": 1,
-      "mae": 0.030857407407402598
+      "mae": 0.030857407407407406
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2026-02",
       "avaliados": 22,
       "sinalizados": 7,
-      "mae": 0.059895454545454314
+      "mae": 0.05989545454545455
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2026-03",
       "avaliados": 55,
       "sinalizados": 44,
-      "mae": 0.29349030303030677
+      "mae": 0.29349030309090907
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2026-04",
       "avaliados": 52,
       "sinalizados": 39,
-      "mae": 0.3598076923076991
+      "mae": 0.35980769249999994
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2026-05",
       "avaliados": 55,
       "sinalizados": 20,
-      "mae": 0.49798909090909776
+      "mae": 0.49798909090909094
     },
     {
       "produto": "GASOLINA ADITIVADA",
       "mes": "2026-06",
       "avaliados": 70,
       "sinalizados": 4,
-      "mae": 0.18878714285714707
+      "mae": 0.18878714285714282
     },
     {
       "produto": "GNV",
       "mes": "2025-06",
       "avaliados": 6,
       "sinalizados": 0,
-      "mae": 0.03923333333333071
+      "mae": 0.039233333333333335
     },
     {
       "produto": "GNV",
       "mes": "2025-07",
       "avaliados": 12,
       "sinalizados": 2,
-      "mae": 0.06427500000000148
+      "mae": 0.06427500000000001
     },
     {
       "produto": "GNV",
       "mes": "2025-08",
       "avaliados": 9,
       "sinalizados": 9,
-      "mae": 0.1722555555555459
+      "mae": 0.17225555555555555
     },
     {
       "produto": "GNV",
       "mes": "2025-09",
       "avaliados": 15,
       "sinalizados": 0,
-      "mae": 0.11836999999998324
+      "mae": 0.11837000000000002
     },
     {
       "produto": "GNV",
       "mes": "2025-10",
       "avaliados": 11,
       "sinalizados": 0,
-      "mae": 0.12015454545452889
+      "mae": 0.12015454545454549
     },
     {
       "produto": "GNV",
       "mes": "2025-11",
       "avaliados": 12,
       "sinalizados": 12,
-      "mae": 0.000550000000022699
+      "mae": 0.00055
     },
     {
       "produto": "GNV",
       "mes": "2025-12",
       "avaliados": 9,
       "sinalizados": 9,
-      "mae": 0.000550000000022699
+      "mae": 0.00055
     },
     {
       "produto": "GNV",
       "mes": "2026-01",
       "avaliados": 4,
       "sinalizados": 2,
-      "mae": 0.0002750000000228958
+      "mae": 0.000275
     },
     {
       "produto": "GNV",
       "mes": "2026-02",
       "avaliados": 6,
       "sinalizados": 6,
-      "mae": 0.08000000000002316
+      "mae": 0.08
     },
     {
       "produto": "GNV",
       "mes": "2026-03",
       "avaliados": 8,
       "sinalizados": 8,
-      "mae": 0.08000000000002316
+      "mae": 0.08
     },
     {
       "produto": "GNV",
       "mes": "2026-04",
       "avaliados": 12,
       "sinalizados": 12,
-      "mae": 0.08000000000002316
+      "mae": 0.07999999999999999
     },
     {
       "produto": "GNV",
       "mes": "2026-05",
       "avaliados": 16,
       "sinalizados": 1,
-      "mae": 0.0475281249999831
+      "mae": 0.047528125000000004
     },
     {
       "produto": "GNV",
       "mes": "2026-06",
       "avaliados": 19,
       "sinalizados": 0,
-      "mae": 0.034813157894722925
+      "mae": 0.034813157894736844
     }
   ],
   "limite_distancia_kmeans": {
-    "DIESEL S10": 1.976242153240852,
-    "ETANOL": 2.828116029406991,
-    "GASOLINA": 2.7193389289836736,
-    "GASOLINA ADITIVADA": 3.019777556036786,
-    "GNV": 3.0410512980019764
+    "DIESEL S10": 1.97624215,
+    "ETANOL": 2.82811603,
+    "GASOLINA": 2.71933893,
+    "GASOLINA ADITIVADA": 3.01977756,
+    "GNV": 3.0410513
   },
   "testes_contaminacao": {
     "DIESEL S10": {
