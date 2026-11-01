@@ -94,9 +94,8 @@ def _imprimir_resumo(df, minimo):
     print("Registros sem outros postos para comparação municipal:", df["mediana_municipal"].isna().sum())
 
 
-def _rodar_isolado():
-    # Uso apenas para depuração local desta etapa: lê a base limpa do disco,
-    # processa e salva um CSV de conferência. 
+def main():
+    # Lê a base limpa do disco, processa e salva a base usada pelas etapas seguintes.
     caminho_entrada = Path("base_limpa_aracaju.csv")
     caminho_saida = Path("dados_aracaju_processados.csv")
 
@@ -118,8 +117,8 @@ def _rodar_isolado():
         decimal=",",
         date_format="%d/%m/%Y",
     )
-    print(f"[depuração] Base processada salva em {caminho_saida}")
+    print(f"Base processada salva em {caminho_saida}")
 
 
 if __name__ == "__main__":
-    _rodar_isolado()
+    main()
