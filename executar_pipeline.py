@@ -16,6 +16,7 @@ for script, relatorio in [('criaBaseBruta.py', 'limpeza.txt'),
                                capture_output=True, text=True, encoding='utf-8',
                                env={**os.environ, 'PYTHONIOENCODING': 'utf-8'})
     (relatorios / relatorio).write_text(resultado.stdout + resultado.stderr, encoding='utf-8')
-    print(f'{script}: código {resultado.returncode}; relatório em relatorios/{relatorio}')
+    # Texto sem acentos de propósito: aparece igual em qualquer codificação de terminal.
+    print(f'{script}: retorno {resultado.returncode}; detalhes em relatorios/{relatorio}')
     if resultado.returncode:
         raise RuntimeError(resultado.stderr)
