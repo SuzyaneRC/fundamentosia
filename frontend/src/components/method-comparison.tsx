@@ -4,15 +4,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { methodKeys, methodLabels, type FuelRecord } from '@/lib/fuel-data'
 
+// Seção "Comparação entre métodos". Recalcula no navegador, para o recorte filtrado, os mesmos
+// indicadores que comparar_metodos.py calcula para a base inteira.
 export function MethodComparison({ records }: { records: FuelRecord[] }) {
   const [commonOnly, setCommonOnly] = useState(false)
+  // Registros avaliados pelos quatro métodos: a única população igual para todos.
   const common = records.filter(r => methodKeys.every(k => r.methods[k].evaluated))
   const selected = commonOnly ? common : records
-  const summary = methodKeys.map(key => {
+  // Totais por método; a taxa considera só os avaliados e é null quando não há nenhum.
+  const summary =methodKeys.map(key => {
     const evaluated = selected.filter(r => r.methods[key].evaluated)
     const flagged = evaluated.filter(r => r.methods[key].anomaly).length
     return { key, name: methodLabels[key], evaluated: evaluated.length, flagged, rate: evaluated.length ? 100 * flagged / evaluated.length : null }
   })
+  // Para cada par, usa os registros avaliados pelos dois. Concordância: mesma decisão, inclusive
+  // não sinalizar. Jaccard: sinalizados pelos dois / sinalizados por pelo menos um.
   const pairs = methodKeys.flatMap((a, i) => methodKeys.slice(i + 1).map(b => {
     const shared = selected.filter(r => r.methods[a].evaluated && r.methods[b].evaluated)
     const both = shared.filter(r => r.methods[a].anomaly && r.methods[b].anomaly).length
@@ -21,6 +27,8 @@ export function MethodComparison({ records }: { records: FuelRecord[] }) {
     return { a, b, count: shared.length, both, agreement: shared.length ? 100 * same / shared.length : null, jaccard: union ? 100 * both / union : null }
   }))
   const percent = (n: number | null) => n === null ? 'N/D' : `${n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })}%`
+  // Diagnóstico do Random Forest por produto e mês. A pontuação do método é o erro absoluto em R$,
+  // logo a média dessas pontuações é o erro médio (MAE) do grupo.
   const forestRecords = selected.filter(r => r.methods.random_forest.evaluated)
   const forestGroups = new Map<string, FuelRecord[]>()
   for (const r of forestRecords) {

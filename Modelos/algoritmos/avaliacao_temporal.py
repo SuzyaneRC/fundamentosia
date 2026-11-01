@@ -1,4 +1,15 @@
-"""Janelas crescentes: cada previsão usa somente datas anteriores ao teste."""
+"""Janelas crescentes: cada previsão usa somente datas anteriores ao teste.
+
+Simula o uso real do modelo, que só conheceria o passado. Com datas em ordem:
+
+    janela 1: [ treino ][ calibração ][ teste ]
+    janela 2: [ treino ............. ][ calibração ][ teste ]
+    janela 3: [ treino .......................... ][ calibração ][ teste ]
+
+- Treino: ajusta o modelo.
+- Calibração: mede os erros do modelo em datas que ele não viu e define o limite.
+- Teste: recebe a previsão e o alerta. Cada registro é testado no máximo uma vez.
+"""
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
@@ -7,9 +18,15 @@ CASAS_DECIMAIS = 8
 
 
 def criar_janelas(datas):
+    """Devolve uma lista de (dias de treino, dias de calibração, dias de teste).
+
+    A divisão usa datas distintas, não linhas, para que coletas do mesmo dia nunca fiquem
+    em conjuntos diferentes. Com menos de 10 datas, não há janelas.
+    """
     dias = np.sort(pd.Series(datas).dropna().unique())
     if len(dias) < 10:
         return []
+    # Cerca de 40% das datas formam o treino inicial; cada bloco seguinte tem cerca de 10%.
     aquecimento = max(4, int(len(dias) * 0.4))
     tamanho = max(2, int(len(dias) * 0.1))
     janelas = []
@@ -21,6 +38,14 @@ def criar_janelas(datas):
 
 
 def avaliar_janelas(df, features, target, criar_modelo, percentil=0.95):
+    """Treina um modelo novo por produto e janela e sinaliza erros acima do limite.
+
+    O limite é o `percentil` dos erros da calibração da própria janela. Por isso, a taxa
+    no teste pode passar muito de 5% quando os preços mudam depois da calibração.
+
+    Devolve (último modelo, previsões, erros, sinalizações, limites, métricas, índices).
+    Os arrays seguem a ordem de `índices`, e `métricas['janelas']` detalha cada janela.
+    """
     previsoes, erros, flags, limites, indices = [], [], [], [], []
     detalhes = []
     ultimo_modelo = None
@@ -30,6 +55,7 @@ def avaliar_janelas(df, features, target, criar_modelo, percentil=0.95):
             treino = grupo.loc[datas.isin(dias_treino)]
             cal = grupo.loc[datas.isin(dias_cal)]
             teste = grupo.loc[datas.isin(dias_teste)]
+            # Sem dados suficientes, a janela é ignorada e seus registros ficam não avaliados.
             if len(treino) < 20 or len(cal) < 5 or teste.empty:
                 continue
             modelo = criar_modelo()
@@ -64,6 +90,7 @@ def avaliar_janelas(df, features, target, criar_modelo, percentil=0.95):
     if len(indices) != len(set(indices)):
         raise AssertionError('Um registro recebeu mais de uma previsão de teste.')
     real = df.loc[indices, target].to_numpy()
+    # MAE: erro médio em R$. RMSE: pesa mais os erros grandes. R²: 1 seria previsão perfeita.
     metricas = {
         'mae': float(mean_absolute_error(real, previsoes)),
         'rmse': float(np.sqrt(mean_squared_error(real, previsoes))),

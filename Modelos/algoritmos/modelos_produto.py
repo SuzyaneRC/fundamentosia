@@ -1,4 +1,8 @@
-"""Padronização e modelos não supervisionados independentes por combustível."""
+"""Padronização e modelos não supervisionados independentes por combustível.
+
+Cada combustível recebe seu próprio ajuste porque seus níveis de preço são diferentes:
+em um modelo único, o preço típico do GNV poderia parecer atípico perto do da gasolina.
+"""
 import numpy as np
 from util_dados import FEATURES_ANOMALIA, selecionar_registros_aptos, padronizar_features
 from isolation_forest import executar_isolation_forest, testar_contaminacoes, aplicar_resultados as aplicar_if
@@ -6,6 +10,10 @@ from kmeans import executar_kmeans, aplicar_resultados as aplicar_km, N_CLUSTERS
 
 
 def aplicar_por_produto(df):
+    """Roda Isolation Forest e K-Means por produto e grava os resultados na base.
+
+    Devolve (base com resultados, limite do K-Means por produto, testes de contaminação).
+    """
     aptos, _ = selecionar_registros_aptos(df, FEATURES_ANOMALIA)
     if_indices, if_flags, if_scores = [], [], []
     km_indices, km_clusters, km_flags, km_scores = [], [], [], []
@@ -21,6 +29,7 @@ def aplicar_por_produto(df):
         if_flags.extend(flags)
         if_scores.extend(scores)
         testes[str(produto)] = testar_contaminacoes(x)
+        # K-Means precisa de ao menos K vetores diferentes para formar K grupos.
         if len(np.unique(x, axis=0)) < N_CLUSTERS:
             continue
         _, clusters, scores, flags, limite = executar_kmeans(x)

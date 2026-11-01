@@ -1,3 +1,8 @@
+"""Testes dos métodos. Na raiz do projeto: `python -m unittest discover -s tests`.
+
+Alguns testes usam dados pequenos e criados na hora; outros conferem os arquivos gerados
+pelo pipeline, então a base e os relatórios precisam estar atualizados.
+"""
 import json
 from pathlib import Path
 import unittest

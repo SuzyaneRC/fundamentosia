@@ -1,3 +1,12 @@
+"""Método 4, Random Forest: prevê o preço e sinaliza erros de previsão muito grandes.
+
+Diferente dos outros métodos, avalia apenas datas posteriores ao treino. A divisão em
+janelas de tempo está em `avaliacao_temporal.py`. Ser sinalizado significa que o preço
+ficou mais longe da previsão do que era comum em datas recentes, não que está errado.
+
+Limitação importante: árvores não preveem valores acima dos que viram no treino. Quando
+o mercado muda de patamar, o erro cresce em muitos postos ao mesmo tempo.
+"""
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.pipeline import Pipeline
@@ -27,6 +36,10 @@ RANDOM_STATE = 42
 
 
 def criar_pipeline(n_estimators=N_ESTIMATORS):
+    """Monta o modelo: transforma categorias em colunas 0/1 e passa os números sem alteração.
+
+    `handle_unknown="ignore"` evita erro quando surge um bairro ou bandeira fora do treino.
+    """
     pre_processador = ColumnTransformer(
         transformers=[
             ("categoricas", OneHotEncoder(handle_unknown="ignore"), FEATURES_CATEGORICAS),
@@ -50,6 +63,7 @@ def criar_pipeline(n_estimators=N_ESTIMATORS):
 
 
 def executar_random_forest(df_modelo, n_estimators=N_ESTIMATORS, percentil=PERCENTIL_ANOMALIA):
+    """Avalia o modelo em janelas temporais; o retorno está descrito em `avaliar_janelas`."""
     from avaliacao_temporal import avaliar_janelas
     return avaliar_janelas(
         df_modelo, FEATURES_NUMERICAS + FEATURES_CATEGORICAS,
@@ -58,6 +72,7 @@ def executar_random_forest(df_modelo, n_estimators=N_ESTIMATORS, percentil=PERCE
 
 
 def aplicar_resultados(df_original, indices_modelo, predicoes, erros, anomalias):
+    """Copia os resultados para a base; só os registros de teste contam como avaliados."""
     df_resultado = df_original.copy()
     df_resultado["utilizado_random_forest"] = False
     df_resultado["previsao_random_forest"] = float("nan")
@@ -73,6 +88,7 @@ def aplicar_resultados(df_original, indices_modelo, predicoes, erros, anomalias)
 
 
 def exibir_resultados(df_resultado, limite_anomalia, metricas):
+    """Imprime as métricas de teste e os 10 maiores erros de previsão."""
     usados = int(df_resultado["utilizado_random_forest"].sum())
     quantidade_anomalias = int(df_resultado["anomalia_random_forest"].sum())
 
@@ -109,6 +125,7 @@ def exibir_resultados(df_resultado, limite_anomalia, metricas):
 
 
 def main():
+    """Executa o método isoladamente; o pipeline usa `comparar_metodos.py`."""
     df = carregar_dados()
     colunas_modelo = validar_colunas(df, COLUNAS_MODELO)
     df_modelo, mascara_apta = selecionar_registros_aptos(df, colunas_modelo)

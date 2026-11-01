@@ -1,4 +1,12 @@
-"""Mede quanto os alertas dos quatro métodos dependem dos parâmetros escolhidos."""
+"""Etapa 5 do pipeline: mede quanto os alertas dependem dos parâmetros escolhidos.
+
+Repete os quatro métodos em 34 configurações e compara cada uma com a de referência, a
+mesma de `comparar_metodos.py`. Não altera a base do painel. Gera em `relatorios/`:
+    sensibilidade.md / .json    resultados no total, por produto e por mês
+    estabilidade_alertas.csv    em que fração das configurações cada registro é sinalizado
+
+Mede estabilidade, não acerto: sem rótulos confirmados, não indica o melhor parâmetro.
+"""
 from pathlib import Path
 from itertools import product
 import json
@@ -15,12 +23,14 @@ from random_forest import executar_random_forest, COLUNAS_MODELO
 from baseline_regressao import aplicar_baseline
 from comparar_metodos import METODOS
 
+# Configurações testadas por método; product() gera todas as combinações entre os valores.
 GRADES = {
     'regressao': list(product((2, 2.5, 3), (3, 3.5, 4))),
     'isolation_forest': list(CONTAMINACOES_TESTE),
     'kmeans': list(product((2, 3, 4, 5), (0.90, 0.95, 0.99))),
     'random_forest': list(product((100, 200, 400), (0.90, 0.95, 0.99))),
 }
+# Parâmetros oficiais, usados na base consolidada e no painel.
 REFERENCIAS = {'regressao': (2, 3.5), 'isolation_forest': 0.05, 'kmeans': (3, 0.95), 'random_forest': (200, 0.95)}
 NOMES_PARAMETROS = {'regressao': 'desvios={}, MAD={}', 'isolation_forest': 'contaminação={}',
                     'kmeans': 'K={}, percentil={}', 'random_forest': 'árvores={}, percentil={}'}
@@ -29,15 +39,18 @@ FAIXA_MEDIANA_MUNICIPAL = 1.0
 
 
 def nome_configuracao(metodo, parametros):
+    """Monta o rótulo legível da configuração, como "K=3, percentil=0.95"."""
     valores = parametros if isinstance(parametros, tuple) else (parametros,)
     return NOMES_PARAMETROS[metodo].format(*valores)
 
 
 def resultado_vazio(df):
+    """Cria as séries (usados, sinalizados), todas False, alinhadas às linhas de `df`."""
     return pd.Series(False, index=df.index), pd.Series(False, index=df.index)
 
 
 def rodar_baseline(df, parametros):
+    """Todo `rodar_*` devolve (usados, sinalizados, métricas ou None) no mesmo formato."""
     resultado = aplicar_baseline(df, *parametros)
     return resultado['utilizado_regressao'], resultado['anomalia_regressao'], None
 
@@ -80,6 +93,7 @@ EXECUTORES = {'regressao': rodar_baseline, 'isolation_forest': rodar_isolation_f
 
 
 def comparar_com_referencia(usados, flags, usados_ref, flags_ref):
+    # "Mantidos" é a parcela dos alertas da referência que continua sinalizada.
     # Compara apenas a interseção avaliada, como na comparação entre métodos.
     comum = usados & usados_ref
     x, y = flags[comum], flags_ref[comum]
@@ -89,6 +103,7 @@ def comparar_com_referencia(usados, flags, usados_ref, flags_ref):
 
 
 def contar(usados, flags):
+    """Calcula avaliados, sinalizados e a taxa sobre os avaliados."""
     avaliados, sinalizados = int(usados.sum()), int((usados & flags).sum())
     return {'avaliados': avaliados, 'sinalizados': sinalizados,
             'taxa': sinalizados / avaliados if avaliados else None}
@@ -124,15 +139,18 @@ def calcular_estabilidade(df, execucoes):
 
 
 def percentual(valor):
+    """Formata uma fração como porcentagem; valor ausente vira "N/D"."""
     return 'N/D' if valor is None or pd.isna(valor) else f'{valor:.2%}'
 
 
 def faixa(linhas, campo='taxa'):
+    """Formata o menor e o maior valor do campo, como "1.00% a 10.00%"."""
     valores = [l[campo] for l in linhas if l[campo] is not None]
     return f'{min(valores):.2%} a {max(valores):.2%}' if valores else 'N/D'
 
 
 def tabela_grupos(titulo, rotulo, linhas):
+    """Monta a tabela Markdown com a taxa de referência e a faixa de cada grupo."""
     saida = ['', titulo, '', f'| Método | {rotulo} | Referência | Faixa entre configurações |', '|---|---|---:|---|']
     for metodo, (nome, _) in METODOS.items():
         grupos = sorted({l['grupo'] for l in linhas if l['metodo'] == metodo})
@@ -144,6 +162,7 @@ def tabela_grupos(titulo, rotulo, linhas):
 
 
 def gerar_relatorio(geral, por_produto, por_mes, alinhamento, estaveis):
+    """Monta o texto completo de `relatorios/sensibilidade.md`."""
     linhas = ['# Análise de sensibilidade dos parâmetros', '',
               'Relatório reproduzível gerado por `python analise_sensibilidade.py`. A base consolidada e o painel continuam usando os parâmetros de referência.', '',
               'Mantidos: parcela dos alertas da referência também sinalizada na configuração. Jaccard e mantidos usam a interseção dos registros avaliados.', '',
@@ -172,6 +191,7 @@ def gerar_relatorio(geral, por_produto, por_mes, alinhamento, estaveis):
 
 
 def main():
+    """Executa toda a grade, compara com a referência e grava os relatórios."""
     df = carregar_dados()
     datas = pd.to_datetime(df['Data da Coleta'], dayfirst=True)
     execucoes = []
@@ -194,6 +214,7 @@ def main():
         geral.append(linha)
     por_produto = resumir_grupos(df['Produto'], execucoes)
     por_mes = resumir_grupos(datas.dt.to_period('M').astype(str), execucoes)
+    # Conta alertas com preço perto dos outros postos: dizem menos sobre um posto específico.
     alinhamento = {}
     for metodo, ref in referencias.items():
         distancia = df.loc[ref['usados'] & ref['flags'], 'diff_mediana_municipal_percentual'].dropna().abs()

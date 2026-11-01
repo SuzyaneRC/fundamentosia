@@ -2,9 +2,11 @@ import { useState, type ReactNode } from 'react'
 import type { FuelRecord } from './fuel-data'
 import { ReviewContext, readReviews, STORAGE, recordKey, fingerprint, type ReviewStatus } from './review-store'
 
+// Mantém as revisões em memória e as compartilha com os componentes internos via contexto do React.
 export function ReviewProvider({ children }: { children: ReactNode }) {
   const [reviews, setReviews] = useState(readReviews)
   const [error, setError] = useState('')
+  // Grava primeiro no navegador e só depois atualiza a tela; devolve true se conseguiu salvar.
   function save(record: FuelRecord, status: ReviewStatus, note: string) {
     const next = { ...reviews, [recordKey(record)]: { status, note: note.slice(0, 1000), updatedAt: new Date().toISOString(), fingerprint: fingerprint(record) } }
     try {

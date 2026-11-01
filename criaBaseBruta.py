@@ -1,3 +1,19 @@
+"""Etapa 1 do pipeline: junta as planilhas da ANP e gera a base limpa de Aracaju.
+
+Entrada: todos os CSVs da pasta `planilhas`, com separador `;` e em UTF-8.
+Saída: `base_limpa_aracaju.csv`, com uma linha por posto, produto e data.
+
+Este arquivo é um script: o código fora das funções roda de cima para baixo ao
+executá-lo, sem bloco `main`. Por isso ele não deve ser importado por outros módulos.
+
+Ordem da limpeza:
+    1. Mantém somente SE/ARACAJU e as colunas usadas na análise.
+    2. Padroniza CNPJ (só dígitos) e nomes de produto.
+    3. Remove produtos que não são combustíveis automotivos.
+    4. Converte datas e preços; remove preços vazios, zerados ou negativos.
+    5. Remove linhas duplicadas e repetições de posto + produto + data, mantendo a primeira.
+       Preços divergentes ficam registrados em `relatorios/coletas_conflitantes.csv`.
+"""
 from pathlib import Path
 import re
 import unicodedata
@@ -29,6 +45,8 @@ CHAVE_REGISTRO = ["CNPJ da Revenda", "Produto", "Data da Coleta"]
 
 def converter_valor(valor):
     # Converte preços em real, como "6,79" ou "R$ 6,79", para número.
+    # Quando há ponto e vírgula, o último símbolo é o decimal: "1.234,56" e "1,234.56"
+    # viram 1234.56. Texto que não forma um número vira NaN e é removido depois.
     if pd.isna(valor):
         return pd.NA
 
@@ -52,6 +70,7 @@ def padronizar_produto(produto):
     if pd.isna(produto):
         return pd.NA
 
+    # NFKD separa a letra do acento; o filtro seguinte descarta o acento ("É" -> "E").
     texto = unicodedata.normalize("NFKD", str(produto))
     texto = "".join(caractere for caractere in texto if not unicodedata.combining(caractere))
     texto = re.sub(r"\s+", " ", texto).strip().upper()
