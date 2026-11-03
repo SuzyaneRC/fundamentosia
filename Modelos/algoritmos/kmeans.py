@@ -1,3 +1,9 @@
+"""Método 3, K-Means: sinaliza registros distantes de todos os grupos típicos.
+
+O algoritmo divide os registros em K grupos parecidos, cada um com um centro (centroide).
+A pontuação é a distância até o centroide mais próximo. Quem fica acima do percentil
+escolhido é sinalizado, por isso a taxa de cerca de 5% decorre da configuração.
+"""
 import numpy as np
 from sklearn.cluster import KMeans
 
@@ -18,21 +24,25 @@ PERCENTIL_ANOMALIA = 0.95
 RANDOM_STATE = 42
 
 
-def executar_kmeans(x_scaled):
+def executar_kmeans(x_scaled, n_clusters=N_CLUSTERS, percentil=PERCENTIL_ANOMALIA):
+    """Devolve (modelo, grupo de cada registro, pontuações, sinalizações, limite)."""
     modelo = KMeans(
-        n_clusters=N_CLUSTERS,
+        n_clusters=n_clusters,
         random_state=RANDOM_STATE,
         n_init=10,
     )
     clusters = modelo.fit_predict(x_scaled)
     distancias = modelo.transform(x_scaled)
-    scores = distancias.min(axis=1)
-    limite_anomalia = float(np.quantile(scores, PERCENTIL_ANOMALIA))
+    # Arredonda o ruído numérico para que o resultado se repita entre execuções.
+    scores = np.round(distancias.min(axis=1), 8)
+    limite_anomalia = round(float(np.quantile(scores, percentil)), 8)
+    # Distância zero nunca é alerta, mesmo se muitos registros idênticos zerarem o limite.
     anomalias = (scores >= limite_anomalia) & (scores > 1e-12)
     return modelo, clusters, scores, anomalias, limite_anomalia
 
 
 def aplicar_resultados(df_original, indices_modelo, clusters, scores, anomalias):
+    """Copia os resultados para a base; registros fora de `indices_modelo` ficam não avaliados."""
     df_resultado = df_original.copy()
     df_resultado["utilizado_kmeans"] = False
     df_resultado["cluster_kmeans"] = float("nan")
@@ -48,6 +58,7 @@ def aplicar_resultados(df_original, indices_modelo, clusters, scores, anomalias)
 
 
 def exibir_resultados(df_resultado, limite_anomalia):
+    """Imprime um resumo, o tamanho dos grupos e os 10 registros mais distantes."""
     usados = int(df_resultado["utilizado_kmeans"].sum())
     quantidade_anomalias = int(df_resultado["anomalia_kmeans"].sum())
 
@@ -87,11 +98,13 @@ def exibir_resultados(df_resultado, limite_anomalia):
 
 
 def main():
+    """Executa o método isoladamente; o pipeline usa `comparar_metodos.py`."""
+    # Importado aqui porque modelos_produto também importa este módulo (evita ciclo).
     from modelos_produto import aplicar_por_produto
     df_resultado, limites, contaminacoes = aplicar_por_produto(carregar_dados())
-    print("Modelos e padroniza??o separados por combust?vel.")
+    print("Modelos e padronização separados por combustível.")
     print("Limites K-Means:", limites)
-    print("Testes de contamina??o por produto:", contaminacoes)
+    print("Testes de contaminação por produto:", contaminacoes)
     quantidade_anomalias = int(df_resultado["anomalia_kmeans"].sum())
     caminho_txt = salvar_numero_txt(quantidade_anomalias, "anomalias_kmeans.txt")
     caminho = salvar_resultados(df_resultado, "resultado_kmeans.csv")

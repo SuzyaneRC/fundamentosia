@@ -1,3 +1,4 @@
+"""Funções e caminhos compartilhados pelos modelos: leitura, seleção e gravação de dados."""
 from pathlib import Path
 
 import pandas as pd
@@ -9,6 +10,8 @@ PASTA_MODELOS = Path(__file__).resolve().parents[1]
 PASTA_SAIDAS = PASTA_MODELOS / "Saídas"
 ARQUIVO_ENTRADA = RAIZ_PROJETO / "dados_aracaju_processados.csv"
 
+# Variáveis de entrada do Isolation Forest e do K-Means. Juntas, descrevem o nível do
+# preço e sua distância para a coleta anterior, o histórico do posto e os outros postos.
 FEATURES_ANOMALIA = [
     "Valor de Venda",
     "variacao_percentual",
@@ -18,6 +21,7 @@ FEATURES_ANOMALIA = [
 
 
 def carregar_dados(caminho=ARQUIVO_ENTRADA):
+    """Lê a base processada, mantendo o CNPJ como texto para preservar zeros à esquerda."""
     return pd.read_csv(
         caminho,
         sep=";",
@@ -28,6 +32,7 @@ def carregar_dados(caminho=ARQUIVO_ENTRADA):
 
 
 def salvar_resultados(df, nome_arquivo):
+    """Grava `df` em `Modelos/Saídas` no padrão brasileiro e devolve o caminho."""
     PASTA_SAIDAS.mkdir(parents=True, exist_ok=True)
     caminho = PASTA_SAIDAS / nome_arquivo
     df.to_csv(
@@ -41,6 +46,7 @@ def salvar_resultados(df, nome_arquivo):
 
 
 def salvar_numero_txt(numero, nome_arquivo):
+    """Grava um número em um arquivo de texto de `Modelos/Saídas` e devolve o caminho."""
     PASTA_SAIDAS.mkdir(parents=True, exist_ok=True)
     caminho = PASTA_SAIDAS / nome_arquivo
     caminho.write_text(f"{numero}\n", encoding="utf-8")
@@ -48,6 +54,7 @@ def salvar_numero_txt(numero, nome_arquivo):
 
 
 def validar_colunas(df, colunas):
+    """Interrompe com uma mensagem clara se faltar alguma coluna; senão, devolve a lista."""
     faltantes = [coluna for coluna in colunas if coluna not in df.columns]
     if faltantes:
         raise ValueError(
@@ -58,6 +65,7 @@ def validar_colunas(df, colunas):
 
 
 def normalizar_coluna_booleana(serie):
+    """Converte uma coluna em booleano; lida com valores como "True" ou "sim" lidos de CSV."""
     if pd.api.types.is_bool_dtype(serie):
         return serie.fillna(False)
 
@@ -66,6 +74,12 @@ def normalizar_coluna_booleana(serie):
 
 
 def selecionar_registros_aptos(df, colunas_obrigatorias):
+    """Separa os registros que um modelo pode usar.
+
+    Exclui séries curtas e linhas com valor vazio em alguma coluna obrigatória. Devolve
+    os registros aptos, com os índices originais, e a máscara True/False sobre `df`. Os
+    índices preservados permitem gravar os resultados de volta nas linhas certas.
+    """
     df_modelo = df.copy()
     mascara_apta = pd.Series(True, index=df_modelo.index)
 
@@ -78,12 +92,14 @@ def selecionar_registros_aptos(df, colunas_obrigatorias):
 
 
 def padronizar_features(df_modelo, features):
+    """Deixa cada variável com média 0 e desvio 1, para que nenhuma domine pela escala."""
     scaler = StandardScaler()
     x_scaled = scaler.fit_transform(df_modelo[features])
     return x_scaled, scaler
 
 
 def imprimir_resumo_base(df, df_modelo, mascara_apta, features):
+    """Imprime quantos registros ficaram aptos e quantos valores faltam por variável."""
     print("Resumo da base para modelagem:")
     print("Quantidade total de registros:", len(df))
     print("Quantidade de registros aptos para o modelo:", len(df_modelo))

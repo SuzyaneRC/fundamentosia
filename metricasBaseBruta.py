@@ -1,3 +1,7 @@
+"""Etapa 2 do pipeline: imprime um resumo da base limpa para conferência.
+
+Não gera arquivo próprio; `executar_pipeline.py` guarda a saída em `relatorios/base.txt`.
+"""
 import pandas as pd
 
 # Lê a base limpa usando o mesmo separador e formato decimal da exportação.

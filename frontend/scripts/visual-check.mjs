@@ -1,3 +1,5 @@
+// Teste de ponta a ponta: abre o painel no Chrome, em desktop e celular, e usa a tela como uma
+// pessoa usaria. Requer o servidor rodando (ou PREVIEW_URL). Qualquer assert falho encerra o teste.
 import { chromium } from 'playwright-core'
 import path from 'node:path'
 import assert from 'node:assert/strict'
@@ -21,6 +23,7 @@ for (const config of [
   })
   page.on('pageerror', (error) => errors.push(error.message))
 
+  // Confere população comum, filtro de sinalizações, exportação e persistência da revisão.
   await page.goto(process.env.PREVIEW_URL ?? 'http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded', timeout: 60000 })
   await page.getByText('Comparação entre métodos', { exact: true }).waitFor()
   const commonPopulation = page.getByRole('checkbox', { name: /Comparar somente/ })
@@ -54,6 +57,7 @@ for (const config of [
   assert.equal(await page.getByLabel('Situação da revisão', { exact: true }).inputValue(), 'revisado')
   assert.equal(await page.getByLabel('Observações da revisão').inputValue(), 'Conferência inicial dos indicadores do posto.')
   await page.getByRole('button', { name: 'Fechar' }).click()
+  // Filtros, paginação e tooltip do gráfico são exercitados só no desktop.
   let interactions = null
   if (config.name === 'desktop') {
     const clearButton = page.getByRole('button', { name: 'Limpar filtros' })
@@ -115,6 +119,7 @@ for (const config of [
   await page.close()
 }
 
+// Simula falha no download do CSV e verifica a recuperação pelo botão "Tentar novamente".
 const recovery = await browser.newPage()
 await recovery.route(/\.csv(?:\?.*)?$/, route => route.fulfill({ status: 503, body: '' }))
 await recovery.goto(process.env.PREVIEW_URL ?? 'http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded' })

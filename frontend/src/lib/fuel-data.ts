@@ -1,6 +1,9 @@
+// Camada de dados do painel: baixa o CSV gerado pelo pipeline Python e o converte em objetos tipados.
 import Papa from 'papaparse'
+// O sufixo ?url faz o Vite publicar o CSV como arquivo estático e devolver seu endereço.
 import csvUrl from '../../../dados_aracaju_processados.csv?url'
 
+// Uma linha do CSV como foi lida: todos os valores ainda são texto.
 type CsvRow = {
   [key: string]: string | undefined
   Revenda: string
@@ -54,9 +57,11 @@ export type FuelRecord = {
   hasFewRecords: boolean
 }
 
+// As chaves são os sufixos das colunas do CSV: utilizado_<chave> e anomalia_<chave>.
 export const methodLabels = { regressao: 'Baseline', isolation_forest: 'Isolation Forest', kmeans: 'K-Means', random_forest: 'Random Forest' }
 export type MethodKey = keyof typeof methodLabels
 export const methodKeys = Object.keys(methodLabels) as MethodKey[]
+// Coluna com a pontuação de cada método. As escalas são diferentes e não devem ser comparadas.
 const scoreColumns = { regressao: 'pontuacao_anomalia', isolation_forest: 'score_isolation_forest', kmeans: 'score_kmeans', random_forest: 'erro_abs_random_forest' }
 
 // Converte a data brasileira sem aplicar deslocamento de fuso horário.
@@ -122,6 +127,7 @@ return parsed.data
   .filter((record) => record.station && record.cnpj && record.product && Number.isFinite(record.price) && record.price > 0 && Number.isFinite(record.date.getTime()))
 }
 
+// Baixa e converte a base. O signal permite cancelar o download se a tela for desmontada.
 export async function loadFuelRecords(signal?: AbortSignal) {
   const response = await fetch(csvUrl, { signal })
   if (!response.ok) throw new Error('Não foi possível carregar a base de preços.')

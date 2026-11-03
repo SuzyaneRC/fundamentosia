@@ -1,3 +1,6 @@
+// Tela principal do painel. Fluxo dos dados:
+//   FuelApp baixa o CSV -> App guarda os filtros -> `filtered` alimenta indicadores, gráficos,
+//   comparação de métodos e tabela -> RecordDetails mostra uma coleta e sua revisão.
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
   ArrowDownToLine,
@@ -44,6 +47,7 @@ import { RecordReview } from '@/components/record-review'
 import { ReviewProvider } from '@/lib/reviews'
 import { useReviews, recordKey, reviewLabels, fingerprint } from '@/lib/review-store'
 
+// Valor interno dos filtros para a opção "todos"; não coincide com nenhum valor real da base.
 const ALL = '__all__'
 
 // Formatadores compartilhados mantêm moeda, números e meses no padrão brasileiro.
@@ -158,6 +162,8 @@ function StatCard({ label, value, detail, icon, accent = 'teal' }: StatCardProps
   )
 }
 
+// Painel com os dados já carregados. useMemo evita recalcular listas e gráficos sem necessidade:
+// cada bloco só roda de novo quando mudam as dependências indicadas no fim dele.
 function App({ fuelRecords }: { fuelRecords: FuelRecord[] }) {
   const { reviews } = useReviews()
   // Opções disponíveis nos filtros, extraídas diretamente da base carregada.
@@ -262,6 +268,7 @@ function App({ fuelRecords }: { fuelRecords: FuelRecord[] }) {
   }, [filtered])
 
   // Ordena as coletas mais recentes primeiro e separa apenas a página atual.
+  // O filtro de sinalizações afeta só a tabela; os indicadores continuam usando `filtered`.
   const sortedRecords = useMemo(() => filtered.filter(record => {
     const flagged = methodKeys.filter(key => record.methods[key].evaluated && record.methods[key].anomaly)
     return recordStatus === ALL || (recordStatus === 'Pelo menos um método' && flagged.length > 0)
@@ -287,6 +294,8 @@ function App({ fuelRecords }: { fuelRecords: FuelRecord[] }) {
   }
 
   // Exporta somente os registros do recorte atual no mesmo padrão CSV da base.
+  // tableOnly também aplica o filtro de sinalizações. escapeFormulae impede que o Excel execute
+  // texto como fórmula, e a marca BOM inicial faz o Excel reconhecer os acentos em UTF-8.
   function downloadFiltered(tableOnly = false) {
     const rows = (tableOnly ? sortedRecords : filtered).map((item) => ({
       Revenda: item.station,
@@ -535,6 +544,7 @@ function EmptyState() {
   )
 }
 
+// Coluna "Sinalizações": métodos que sinalizaram, total de avaliados e situação da revisão.
 function MethodFlags({ record }: { record: FuelRecord }) {
   const { reviews } = useReviews()
   const review = reviews[recordKey(record)]
@@ -722,9 +732,11 @@ function Pagination({ page, pageCount, pageSize, total, onPageChange, onPageSize
   )
 }
 
+// Componente raiz: carrega a base e mostra carregamento ou erro antes de abrir o painel.
 export default function FuelApp() {
   const [records, setRecords] = useState<FuelRecord[] | null>(null)
   const [error, setError] = useState('')
+  // Incrementar `attempt` dispara novamente o useEffect abaixo: é o botão "Tentar novamente".
   const [attempt, setAttempt] = useState(0)
   useEffect(() => {
     const controller = new AbortController()

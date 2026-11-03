@@ -75,6 +75,7 @@ Quantidade de registros antes da limpeza: 4816
 Valores ausentes: nenhum
 Preços nulos, iguais a zero ou negativos removidos: 0
 Registros duplicados removidos: 0
+Coletas do mesmo posto, produto e data com preços diferentes: 0
 Registros repetidos do mesmo posto, produto e data removidos: 0
 Quantidade de registros depois da limpeza: 4816
 Total de registros removidos: 0

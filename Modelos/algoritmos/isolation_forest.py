@@ -1,3 +1,12 @@
+"""Método 2, Isolation Forest: procura registros fáceis de isolar dos demais.
+
+O modelo cria árvores que dividem os dados com cortes aleatórios. Um registro atípico
+tende a ficar sozinho depois de poucos cortes. É não supervisionado: aprende sem
+exemplos rotulados e, portanto, não sabe o que é uma irregularidade real.
+
+A `contaminação` informa qual fração da base deve ser sinalizada. Logo, a taxa de cerca
+de 5% é uma escolha de configuração, não uma descoberta sobre os dados.
+"""
 from sklearn.ensemble import IsolationForest
 
 from util_dados import (
@@ -19,6 +28,10 @@ RANDOM_STATE = 42
 
 
 def executar_isolation_forest(x_scaled, contamination=CONTAMINACAO):
+    """Ajusta o modelo e devolve (modelo, sinalizações, pontuações).
+
+    A pontuação é invertida para que um valor maior signifique mais atípico.
+    """
     modelo = IsolationForest(
         n_estimators=N_ESTIMATORS,
         contamination=contamination,
@@ -31,6 +44,7 @@ def executar_isolation_forest(x_scaled, contamination=CONTAMINACAO):
 
 
 def testar_contaminacoes(x_scaled):
+    """Conta quantos registros são sinalizados em cada contaminação de teste."""
     resultados = {}
 
     for contamination in CONTAMINACOES_TESTE:
@@ -44,6 +58,7 @@ def testar_contaminacoes(x_scaled):
 
 
 def aplicar_resultados(df_original, indices_modelo, anomalias, scores):
+    """Copia os resultados para a base; registros fora de `indices_modelo` ficam não avaliados."""
     df_resultado = df_original.copy()
     df_resultado["utilizado_isolation_forest"] = False
     df_resultado["anomalia_isolation_forest"] = False
@@ -57,6 +72,7 @@ def aplicar_resultados(df_original, indices_modelo, anomalias, scores):
 
 
 def exibir_resultados(df_resultado, resultados_contaminacao):
+    """Imprime um resumo e os 10 registros mais atípicos."""
     usados = int(df_resultado["utilizado_isolation_forest"].sum())
     quantidade_anomalias = int(df_resultado["anomalia_isolation_forest"].sum())
     percentual_anomalias = (quantidade_anomalias / usados * 100) if usados else 0
@@ -92,11 +108,13 @@ def exibir_resultados(df_resultado, resultados_contaminacao):
 
 
 def main():
+    """Executa o método isoladamente; o pipeline usa `comparar_metodos.py`."""
+    # Importado aqui porque modelos_produto também importa este módulo (evita ciclo).
     from modelos_produto import aplicar_por_produto
     df_resultado, limites, contaminacoes = aplicar_por_produto(carregar_dados())
-    print("Modelos e padroniza??o separados por combust?vel.")
+    print("Modelos e padronização separados por combustível.")
     print("Limites K-Means:", limites)
-    print("Testes de contamina??o por produto:", contaminacoes)
+    print("Testes de contaminação por produto:", contaminacoes)
     quantidade_anomalias = int(df_resultado["anomalia_isolation_forest"].sum())
     caminho_txt = salvar_numero_txt(
         quantidade_anomalias,

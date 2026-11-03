@@ -55,7 +55,7 @@ Amostra por consenso e distância municipal. A sinalização não comprova irreg
 - Pontuações têm escalas diferentes. Compare sinalizações e rankings, não os valores brutos entre métodos.
 - Concordância total pode ser alta pela predominância de registros não sinalizados; Jaccard compara apenas a união das sinalizações.
 - Não há rótulos de anomalias confirmadas: concordância e coerência não substituem precisão/recall nem validação humana.
-- Próximos testes: K=2/3/4/5, percentis 90/95/99, RF 100/200/400 árvores e limites baseline 2/2,5/3 desvios e 3/3,5/4 MAD. Comparar por produto e em janelas temporais.
+- Sensibilidade a K, percentis, árvores e limites do baseline: ver `relatorios/sensibilidade.md`.
 
 ## Diagnóstico por produto e mês — Random Forest
 
@@ -69,7 +69,7 @@ Amostra por consenso e distância municipal. A sinalização não comprova irreg
 | DIESEL S10 | 2025-11 | 11 | 1 | 9.09% | 0.0109 |
 | DIESEL S10 | 2025-12 | 14 | 2 | 14.29% | 0.0438 |
 | DIESEL S10 | 2026-01 | 12 | 1 | 8.33% | 0.0113 |
-| DIESEL S10 | 2026-02 | 7 | 3 | 42.86% | 0.0190 |
+| DIESEL S10 | 2026-02 | 7 | 3 | 42.86% | 0.0189 |
 | DIESEL S10 | 2026-03 | 16 | 10 | 62.50% | 0.4107 |
 | DIESEL S10 | 2026-04 | 10 | 3 | 30.00% | 0.7384 |
 | DIESEL S10 | 2026-05 | 10 | 1 | 10.00% | 0.5134 |
@@ -126,9 +126,9 @@ Amostra por consenso e distância municipal. A sinalização não comprova irreg
 | DIESEL S10 | 2 | 2025-06-16 | 2025-06-24 a 2025-08-27 | 2025-09-02 a 2025-11-04 | 230 / 37 / 35 | 0.0134 |
 | DIESEL S10 | 3 | 2025-08-27 | 2025-09-02 a 2025-11-04 | 2025-11-11 a 2025-12-29 | 267 / 35 / 22 | 0.0509 |
 | DIESEL S10 | 4 | 2025-11-04 | 2025-11-11 a 2025-12-29 | 2026-01-05 a 2026-03-20 | 302 / 22 / 31 | 0.0353 |
-| DIESEL S10 | 5 | 2025-12-29 | 2026-01-05 a 2026-03-20 | 2026-03-25 a 2026-05-26 | 324 / 31 / 24 | 0.7493 |
+| DIESEL S10 | 5 | 2025-12-29 | 2026-01-05 a 2026-03-20 | 2026-03-25 a 2026-05-26 | 324 / 31 / 24 | 0.7492 |
 | DIESEL S10 | 6 | 2026-03-20 | 2026-03-25 a 2026-05-26 | 2026-06-03 a 2026-06-30 | 355 / 24 / 14 | 0.9010 |
-| ETANOL | 1 | 2025-06-03 | 2025-06-09 a 2025-08-27 | 2025-09-02 a 2025-11-04 | 610 / 128 / 92 | 0.0492 |
+| ETANOL | 1 | 2025-06-03 | 2025-06-09 a 2025-08-27 | 2025-09-02 a 2025-11-04 | 610 / 128 / 92 | 0.0491 |
 | ETANOL | 2 | 2025-08-27 | 2025-09-02 a 2025-11-04 | 2025-11-05 a 2025-12-29 | 738 / 92 / 49 | 0.0821 |
 | ETANOL | 3 | 2025-11-04 | 2025-11-05 a 2025-12-29 | 2026-01-06 a 2026-03-09 | 830 / 49 / 57 | 0.1526 |
 | ETANOL | 4 | 2025-12-29 | 2026-01-06 a 2026-03-09 | 2026-03-20 a 2026-04-29 | 879 / 57 / 64 | 0.1703 |
@@ -144,7 +144,7 @@ Amostra por consenso e distância municipal. A sinalização não comprova irreg
 | GASOLINA ADITIVADA | 2 | 2025-09-02 | 2025-09-09 a 2025-11-05 | 2025-11-11 a 2025-12-30 | 780 / 125 / 77 | 0.1156 |
 | GASOLINA ADITIVADA | 3 | 2025-11-05 | 2025-11-11 a 2025-12-30 | 2026-01-05 a 2026-03-04 | 905 / 77 / 59 | 0.0605 |
 | GASOLINA ADITIVADA | 4 | 2025-12-30 | 2026-01-05 a 2026-03-04 | 2026-03-09 a 2026-04-24 | 982 / 59 / 83 | 0.1363 |
-| GASOLINA ADITIVADA | 5 | 2026-03-04 | 2026-03-09 a 2026-04-24 | 2026-04-27 a 2026-06-08 | 1041 / 83 / 89 | 0.5757 |
+| GASOLINA ADITIVADA | 5 | 2026-03-04 | 2026-03-09 a 2026-04-24 | 2026-04-27 a 2026-06-08 | 1041 / 83 / 89 | 0.5756 |
 | GASOLINA ADITIVADA | 6 | 2026-04-24 | 2026-04-27 a 2026-06-08 | 2026-06-09 a 2026-06-30 | 1124 / 89 / 50 | 0.3190 |
 | GNV | 1 | 2025-04-15 | 2025-04-22 a 2025-06-16 | 2025-06-24 a 2025-08-19 | 108 / 26 / 27 | 0.1051 |
 | GNV | 2 | 2025-06-16 | 2025-06-24 a 2025-08-19 | 2025-09-02 a 2025-10-28 | 134 / 27 / 26 | 0.2932 |

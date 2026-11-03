@@ -1,9 +1,30 @@
+"""Etapa 3 do pipeline: acrescenta as variáveis usadas pelos métodos de detecção.
+
+Entrada: `base_limpa_aracaju.csv`. Saída: `dados_aracaju_processados.csv`.
+Nenhuma linha é removida; o script apenas adiciona estas colunas:
+
+    preco_anterior               preço da coleta anterior do mesmo posto e produto
+    variacao_absoluta            preço atual - preço anterior, em R$
+    variacao_percentual          a mesma variação, em % do preço anterior
+    media_historica_posto        média dos preços anteriores do posto e produto
+    mediana_historica_posto      mediana dos preços anteriores do posto e produto
+    diff_media_historica_posto   preço atual - média histórica
+    diff_mediana_historica_posto preço atual - mediana histórica
+    mediana_municipal            mediana dos OUTROS postos, mesmo produto e mesmo dia
+    diff_mediana_municipal       preço atual - mediana municipal, em R$
+    diff_mediana_municipal_percentual  a mesma diferença, em % da mediana municipal
+    total_registros_serie        quantidade de coletas do posto e produto
+    poucos_registros             True quando a série tem menos de 3 coletas
+
+"Série" é sempre o conjunto de coletas de um posto (CNPJ) para um produto. A primeira
+coleta de cada série não tem histórico, e as colunas que dependem dele ficam vazias.
+"""
 from pathlib import Path
 import pandas as pd
 
 # Limite mínimo de observações para considerar o histórico de um posto+produto
-# estatisticamente confiável. Não é usado para remover dados, apenas para
-# marcar a coluna 'poucos_registros'.
+# estatisticamente confiável. Não remove dados desta base, apenas marca a coluna
+# 'poucos_registros'; depois, os quatro métodos deixam essas séries de fora.
 MINIMO_REGISTROS_CONFIAVEL = 3
 
 
@@ -43,6 +64,8 @@ def _calcular_historico_posto(df):
     grupo = df.groupby(["CNPJ da Revenda", "Produto"], sort=False)["Valor de Venda"]
 
      # Média/mediana histórica do posto até o registro anterior
+     # expanding() acumula do início da série até cada linha; shift(1) tira a linha
+     # atual da conta, para que o preço avaliado não influencie a própria referência.
     df["media_historica_posto"] = grupo.transform(lambda s: s.expanding().mean().shift(1))
     df["mediana_historica_posto"] = grupo.transform(lambda s: s.expanding().median().shift(1))
 
@@ -55,6 +78,7 @@ def _calcular_historico_posto(df):
 def _calcular_mediana_municipal(df):
     # Para cada produto e data, calcula a mediana apenas dos outros CNPJs.
     # Assim, o preço avaliado não influencia a própria referência municipal.
+    # Se nenhum outro posto foi coletado no dia, a mediana fica vazia (NaN).
     medianas_outros_postos = pd.Series(float("nan"), index=df.index, dtype="float64")
     grupos = df.groupby(["Produto", "Data da Coleta"], sort=False).groups
 
@@ -94,9 +118,8 @@ def _imprimir_resumo(df, minimo):
     print("Registros sem outros postos para comparação municipal:", df["mediana_municipal"].isna().sum())
 
 
-def _rodar_isolado():
-    # Uso apenas para depuração local desta etapa: lê a base limpa do disco,
-    # processa e salva um CSV de conferência. 
+def main():
+    # Lê a base limpa do disco, processa e salva a base usada pelas etapas seguintes.
     caminho_entrada = Path("base_limpa_aracaju.csv")
     caminho_saida = Path("dados_aracaju_processados.csv")
 
@@ -118,8 +141,8 @@ def _rodar_isolado():
         decimal=",",
         date_format="%d/%m/%Y",
     )
-    print(f"[depuração] Base processada salva em {caminho_saida}")
+    print(f"Base processada salva em {caminho_saida}")
 
 
 if __name__ == "__main__":
-    _rodar_isolado()
+    main()

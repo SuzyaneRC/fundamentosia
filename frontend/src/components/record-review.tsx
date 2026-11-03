@@ -3,12 +3,15 @@ import { Button } from '@/components/ui/button'
 import { fingerprint, recordKey, reviewLabels, useReviews, type ReviewStatus } from '@/lib/review-store'
 import type { FuelRecord } from '@/lib/fuel-data'
 
+// Formulário de revisão humana de uma coleta, exibido na janela de detalhes.
 export function RecordReview({ record }: { record: FuelRecord }) {
   const { reviews, save, error } = useReviews()
   const review = reviews[recordKey(record)]
+  // Rascunho do formulário: só vai para o armazenamento ao clicar em "Salvar revisão".
   const [status, setStatus] = useState<ReviewStatus>(review?.status ?? 'pendente')
   const [note, setNote] = useState(review?.note ?? '')
   const [saved, setSaved] = useState(false)
+  // A revisão fica desatualizada quando os resultados atuais diferem dos que foram revisados.
   const outdated = review && review.fingerprint !== fingerprint(record)
   return <div className="mt-5 space-y-3 border-t pt-4">
     <h4 className="text-sm font-semibold">Revisão do alerta</h4>

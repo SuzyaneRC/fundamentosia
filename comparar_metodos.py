@@ -1,4 +1,12 @@
-"""Executa os quatro métodos e atualiza a mesma base usada pelo painel."""
+"""Etapa 4 do pipeline: executa os quatro métodos e atualiza a base usada pelo painel.
+
+Entrada e saída principal: `dados_aracaju_processados.csv`. Cada método acrescenta:
+    utilizado_<metodo>   True se o registro foi avaliado pelo método
+    anomalia_<metodo>    True se o método sinalizou o registro
+
+"Não avaliado" é diferente de "não sinalizado": por isso, as taxas e comparações só
+contam registros avaliados. Também gera `relatorios/comparacao.json` e `resultados.md`.
+"""
 from pathlib import Path
 from itertools import combinations
 import json
@@ -12,6 +20,7 @@ from modelos_produto import aplicar_por_produto
 from random_forest import executar_random_forest, aplicar_resultados as aplicar_rf, COLUNAS_MODELO
 from baseline_regressao import aplicar_baseline
 
+# Sufixo de coluna de cada método -> (nome exibido, coluna com a pontuação).
 METODOS = {
     'regressao': ('Baseline', 'pontuacao_anomalia'),
     'isolation_forest': ('Isolation Forest', 'score_isolation_forest'),
@@ -21,6 +30,13 @@ METODOS = {
 
 
 def comparar(df):
+    """Compara cada par de métodos nos registros avaliados pelos dois.
+
+    Concordância: parcela de registros com a mesma decisão, inclusive "não sinalizado".
+    Costuma ser alta porque a maioria não é sinalizada.
+    Jaccard: sinalizados pelos dois / sinalizados por pelo menos um. Mede a sobreposição
+    dos alertas e, por isso, é o indicador mais exigente.
+    """
     pares = []
     for a, b in combinations(METODOS, 2):
         comum = df[f'utilizado_{a}'] & df[f'utilizado_{b}']
@@ -34,6 +50,7 @@ def comparar(df):
 
 
 def main():
+    """Executa os métodos, calcula as comparações e grava base e relatórios."""
     df = aplicar_baseline(carregar_dados())
     df, limite_km, contaminacoes = aplicar_por_produto(df)
     aptos_rf, _ = selecionar_registros_aptos(df, COLUNAS_MODELO)
@@ -41,12 +58,14 @@ def main():
     df = aplicar_rf(df, indices_teste, previsoes, erros, flags)
     df['limite_erro_random_forest'] = float('nan')
     df.loc[indices_teste, 'limite_erro_random_forest'] = limite_rf
+    # Identifica a janela de teste de cada registro, exibida nos detalhes do painel.
     df['janela_random_forest'] = ''
     datas = pd.to_datetime(df['Data da Coleta'], dayfirst=True)
     for janela in metricas['janelas']:
         mascara = (df['Produto'].eq(janela['produto']) & df['utilizado_random_forest']
                    & datas.between(janela['inicio_teste'], janela['fim_teste']))
         df.loc[mascara, 'janela_random_forest'] = f"{janela['produto']} / {janela['janela']}"
+    # Consenso: em quantos métodos o registro foi avaliado e sinalizado.
     df['metodos_avaliados'] = sum(df[f'utilizado_{m}'].astype(int) for m in METODOS)
     df['metodos_sinalizando'] = sum((df[f'utilizado_{m}'] & df[f'anomalia_{m}']).astype(int) for m in METODOS)
     resumo = {m: {'nome': nome, 'avaliados': int(df[f'utilizado_{m}'].sum()),
@@ -60,8 +79,9 @@ def main():
             m: {'avaliados': int(grupo[f'utilizado_{m}'].sum()), 'sinalizados': int(grupo[f'anomalia_{m}'].sum())}
             for m in METODOS
         }
+    # Diagnóstico do Random Forest por produto e mês, para localizar mudanças de patamar.
     por_mes = []
-    rf = df.loc[df['utilizado_random_forest']].copy()
+    rf =df.loc[df['utilizado_random_forest']].copy()
     rf['mes'] = pd.to_datetime(rf['Data da Coleta'], dayfirst=True).dt.to_period('M').astype(str)
     for (produto, mes), grupo in rf.groupby(['Produto', 'mes']):
         por_mes.append({'produto': str(produto), 'mes': str(mes), 'avaliados': len(grupo),
@@ -72,6 +92,7 @@ def main():
                 'limite_distancia_kmeans': limite_km,
                 'testes_contaminacao': contaminacoes}
     (relatorios / 'comparacao.json').write_text(json.dumps(conteudo, ensure_ascii=False, indent=2, allow_nan=False), encoding='utf-8')
+    # Daqui em diante, monta o relatório em Markdown linha a linha.
     linhas = ['# Resultados e comparação dos métodos', '',
               'Relatório reproduzível gerado por `python comparar_metodos.py`.', '',
               '| Método | Avaliados | Sinalizados | Taxa |', '|---|---:|---:|---:|']
@@ -92,6 +113,7 @@ def main():
                'Amostra por consenso e distância municipal. A sinalização não comprova irregularidade.', '',
                '| CNPJ | Produto | Data | Preço | Mediana dos outros postos | Diferença % | Métodos sinalizando / avaliados |',
                '|---|---|---|---:|---:|---:|---:|']
+    # Os 10 casos com mais métodos sinalizando; empates são ordenados pela distância municipal.
     casos = df.loc[df['metodos_sinalizando'] > 0].assign(distancia=lambda d: d['diff_mediana_municipal_percentual'].abs()).sort_values(['metodos_sinalizando', 'distancia'], ascending=False).head(10)
     for _, r in casos.iterrows():
         linhas.append(f"| {r['CNPJ da Revenda']} | {r['Produto']} | {r['Data da Coleta']} | {r['Valor de Venda']:.2f} | {r['mediana_municipal']:.2f} | {r['diff_mediana_municipal_percentual']:.2f} | {r['metodos_sinalizando']} / {r['metodos_avaliados']} |")
@@ -106,7 +128,7 @@ def main():
                '- Pontuações têm escalas diferentes. Compare sinalizações e rankings, não os valores brutos entre métodos.',
                '- Concordância total pode ser alta pela predominância de registros não sinalizados; Jaccard compara apenas a união das sinalizações.',
                '- Não há rótulos de anomalias confirmadas: concordância e coerência não substituem precisão/recall nem validação humana.',
-               '- Próximos testes: K=2/3/4/5, percentis 90/95/99, RF 100/200/400 árvores e limites baseline 2/2,5/3 desvios e 3/3,5/4 MAD. Comparar por produto e em janelas temporais.']
+               '- Sensibilidade a K, percentis, árvores e limites do baseline: ver `relatorios/sensibilidade.md`.']
     linhas += ['', '## Diagnóstico por produto e mês — Random Forest', '',
                '| Produto | Mês | Avaliados | Sinalizados | Taxa | MAE |', '|---|---|---:|---:|---:|---:|']
     for r in por_mes:
