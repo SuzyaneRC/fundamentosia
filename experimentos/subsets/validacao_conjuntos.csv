@@ -1,0 +1,4 @@
+﻿experimento;total;n_treino;n_teste;sobreposicao_ids;ids_unicos;cobertura_completa;alvo_fora_de_X;cnpjs_presentes_nos_dois;datas_presentes_nos_dois;n_treino_features_completas;n_teste_features_completas;n_treino_features_com_faltantes;n_teste_features_com_faltantes
+70_30;4801;3360;1441;0;True;True;True;32;136;3128;1341;232;100
+75_25;4801;3600;1201;0;True;True;True;32;135;3379;1123;221;78
+80_20;4801;3840;961;0;True;True;True;32;135;3629;902;211;59
