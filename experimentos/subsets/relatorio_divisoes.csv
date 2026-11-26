@@ -1,0 +1,4 @@
+﻿experimento;percentual_treino;percentual_teste;n_treino;n_teste;total;semente;random_state
+70_30;0,7;0,3;3360;1441;4801;42;42
+75_25;0,75;0,25;3600;1201;4801;42;42
+80_20;0,8;0,2;3840;961;4801;42;42
